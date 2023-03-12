@@ -12,14 +12,18 @@ const Logout = () => {
 
     if (isToken) {
       logoutApi()
-      notification.success({
-        message: 'Info',
-        description: 'Logout success',
-      })
-      Cookies.remove('token_simpeg')
-      setTimeout(() => {
-        window.location.reload()
-      }, 500)
+        .then((res) => {
+          notification.success({
+            message: 'Info',
+            description: res?.data?.message,
+            duration: 1,
+          })
+          Cookies.remove('token_simpeg')
+          setTimeout(() => {
+            window.location.reload()
+          }, 500)
+        })
+        .catch(() => {})
     }
   }, [])
 
