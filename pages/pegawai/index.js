@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import {
   Card,
   Button,
@@ -20,8 +21,9 @@ import {
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
-import Add from './drawer/add'
-import Edit from './drawer/edit'
+
+const Add = dynamic(() => import('./drawer/add'))
+const Edit = dynamic(() => import('./drawer/edit'))
 
 const { confirm } = Modal
 
@@ -125,9 +127,7 @@ const Pegawai = () => {
       key: 'tmt_jabatan',
       dataIndex: 'tmt_jabatan',
       render: (tmt_jabatan) =>
-        tmt_jabatan
-          ? dayjs(tmt_jabatan).format('DD MMMM YYYY')
-          : '-',
+        tmt_jabatan ? dayjs(tmt_jabatan).format('DD MMMM YYYY') : '-',
     },
     {
       title: 'Pendidikan Terakhir',
@@ -229,20 +229,24 @@ const Pegawai = () => {
         style={{ width: '100%' }}
         scroll={{ x: 1300 }}
       />
-      <Add
-        isOpenAdd={isOpenAdd}
-        onClose={() => {
-          setOpenAdd(false)
-          reloadData()
-        }}
-      />
-      <Edit
-        isOpen={isOpenEdit}
-        onClose={() => {
-          setOpenEdit(false)
-          reloadData()
-        }}
-      />
+      {isOpenAdd && (
+        <Add
+          isOpenAdd={isOpenAdd}
+          onClose={() => {
+            setOpenAdd(false)
+            reloadData()
+          }}
+        />
+      )}
+      {isOpenEdit && (
+        <Edit
+          isOpen={isOpenEdit}
+          onClose={() => {
+            setOpenEdit(false)
+            reloadData()
+          }}
+        />
+      )}
     </Card>
   )
 }

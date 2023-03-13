@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Card, Button, Table, Space, Modal, notification } from 'antd'
 import {
   PlusOutlined,
@@ -10,8 +11,9 @@ import {
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
-import Add from './drawer/add'
-import Edit from './drawer/edit'
+
+const Add = dynamic(() => import('./drawer/add'))
+const Edit = dynamic(() => import('./drawer/edit'))
 
 const { confirm } = Modal
 
@@ -136,20 +138,24 @@ const Golongan = () => {
         columns={columns}
         loading={isLoading}
       />
-      <Add
-        isOpenAdd={isOpenAdd}
-        onClose={() => {
-          setOpenAdd(false)
-          reloadData()
-        }}
-      />
-      <Edit
-        isOpen={isOpenEdit}
-        onClose={() => {
-          setOpenEdit(false)
-          reloadData()
-        }}
-      />
+      {isOpenAdd && (
+        <Add
+          isOpenAdd={isOpenAdd}
+          onClose={() => {
+            setOpenAdd(false)
+            reloadData()
+          }}
+        />
+      )}
+      {isOpenEdit && (
+        <Edit
+          isOpen={isOpenEdit}
+          onClose={() => {
+            setOpenEdit(false)
+            reloadData()
+          }}
+        />
+      )}
     </Card>
   )
 }
