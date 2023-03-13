@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Add from './drawer/add'
 import Edit from './drawer/edit'
 
@@ -117,7 +117,7 @@ const Pegawai = () => {
       dataIndex: 'tmt_golongan',
       render: (tmt_golongan) =>
         tmt_golongan
-          ? moment(tmt_golongan).format('DD MMMM YYYY')
+          ? dayjs(tmt_golongan).format('DD MMMM YYYY')
           : '-',
     },
     {
@@ -126,7 +126,7 @@ const Pegawai = () => {
       dataIndex: 'tmt_jabatan',
       render: (tmt_jabatan) =>
         tmt_jabatan
-          ? moment(tmt_jabatan).format('DD MMMM YYYY')
+          ? dayjs(tmt_jabatan).format('DD MMMM YYYY')
           : '-',
     },
     {

@@ -12,7 +12,7 @@ import {
 } from 'antd'
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { createApi } from '@/helpers/utils'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { PENDIDIKAN_TERAKHIR, PD_PDP_NPD } from '@/constants'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
@@ -36,21 +36,21 @@ export default function Add({ onClose, isOpenAdd }) {
       nama: values?.nama,
       tempat_lahir: values?.tempat_lahir || null,
       tanggal_lahir: values?.tanggal_lahir
-        ? moment(new Date(values?.tanggal_lahir)).format('YYYY-MM-DD')
+        ? dayjs(new Date(values?.tanggal_lahir)).format('YYYY-MM-DD')
         : null,
       nip_lama: values?.nip_lama || null,
       nip_baru: values?.nip_baru || null,
       tmt_golongan: values?.tmt_golongan
-        ? moment(new Date(values?.tmt_golongan)).format('YYYY-MM-DD')
+        ? dayjs(new Date(values?.tmt_golongan)).format('YYYY-MM-DD')
         : null,
       tmt_jabatan: values?.tmt_jabatan
-        ? moment(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
+        ? dayjs(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
         : null,
       kepala_sekolah: values?.kepala_sekolah || false,
       pendidikan_terakhir: values?.pendidikan_terakhir || null,
       jurusan: values?.jurusan || null,
       tahun_lulus: values?.tahun_lulus
-        ? moment(new Date(values?.tahun_lulus)).format('YYYY')
+        ? dayjs(new Date(values?.tahun_lulus)).format('YYYY')
         : null,
       pd_pdp_npd: values?.pd_pdp_npd || null,
       keterangan: values?.keterangan || null,

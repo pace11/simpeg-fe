@@ -12,7 +12,7 @@ import {
 } from 'antd'
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { updateApi } from '@/helpers/utils'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { PENDIDIKAN_TERAKHIR, PD_PDP_NPD } from '@/constants'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
@@ -39,21 +39,21 @@ export default function Edit({ onClose, isOpen }) {
       nama: values?.nama,
       tempat_lahir: values?.tempat_lahir || null,
       tanggal_lahir: values?.tanggal_lahir
-        ? moment(new Date(values?.tanggal_lahir)).format('YYYY-MM-DD')
+        ? dayjs(new Date(values?.tanggal_lahir)).format('YYYY-MM-DD')
         : null,
       nip_lama: values?.nip_lama || null,
       nip_baru: values?.nip_baru || null,
       tmt_golongan: values?.tmt_golongan
-        ? moment(new Date(values?.tmt_golongan)).format('YYYY-MM-DD')
+        ? dayjs(new Date(values?.tmt_golongan)).format('YYYY-MM-DD')
         : null,
       tmt_jabatan: values?.tmt_jabatan
-        ? moment(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
+        ? dayjs(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
         : null,
       kepala_sekolah: values?.kepala_sekolah || false,
       pendidikan_terakhir: values?.pendidikan_terakhir || null,
       jurusan: values?.jurusan || null,
       tahun_lulus: values?.tahun_lulus
-        ? moment(new Date(values?.tahun_lulus)).format('YYYY')
+        ? dayjs(new Date(values?.tahun_lulus)).format('YYYY')
         : null,
       pd_pdp_npd: values?.pd_pdp_npd || null,
       keterangan: values?.keterangan || null,
@@ -101,21 +101,21 @@ export default function Edit({ onClose, isOpen }) {
         nama: detailPegawai?.data?.nama,
         tempat_lahir: detailPegawai?.data?.tempat_lahir,
         tanggal_lahir: detailPegawai?.data?.tanggal_lahir
-          ? moment(detailPegawai?.data?.tanggal_lahir)
+          ? dayjs(detailPegawai?.data?.tanggal_lahir)
           : null,
         nip_lama: detailPegawai?.data?.nip_lama,
         nip_baru: detailPegawai?.data?.nip_baru,
         tmt_golongan: detailPegawai?.data?.tmt_golongan
-          ? moment(detailPegawai?.data?.tmt_golongan)
+          ? dayjs(detailPegawai?.data?.tmt_golongan)
           : null,
         tmt_jabatan: detailPegawai?.data?.tmt_jabatan
-          ? moment(detailPegawai?.data?.tmt_jabatan)
+          ? dayjs(detailPegawai?.data?.tmt_jabatan)
           : null,
         kepala_sekolah: detailPegawai?.data?.kepala_sekolah,
         pendidikan_terakhir: detailPegawai?.data?.pendidikan_terakhir,
         jurusan: detailPegawai?.data?.jurusan,
         tahun_lulus: detailPegawai?.data?.tahun_lulus
-          ? moment(detailPegawai?.data?.tahun_lulus)
+          ? dayjs(detailPegawai?.data?.tahun_lulus)
           : null,
         pd_pdp_npd: detailPegawai?.data?.pd_pdp_npd,
         keterangan: detailPegawai?.data?.keterangan,
@@ -214,6 +214,7 @@ export default function Edit({ onClose, isOpen }) {
             placeholder="Pilih tanggal"
             size="large"
             style={{ width: '100%' }}
+            format="YYYY-MM-DD"
           />
         </Form.Item>
         <Form.Item label="Tmt jabatan" name="tmt_jabatan">

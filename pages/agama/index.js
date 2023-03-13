@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Add from './drawer/add'
 import Edit from './drawer/edit'
 
@@ -84,7 +84,7 @@ const Agama = () => {
       key: 'created_at',
       dataIndex: 'created_at',
       render: (created_at) =>
-        moment(created_at).format('DD MMMM YYYY') || '-',
+        dayjs(created_at).format('DD MMMM YYYY') || '-',
     },
     {
       title: 'Aksi',
