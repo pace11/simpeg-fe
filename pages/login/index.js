@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { MailTwoTone, LockTwoTone } from '@ant-design/icons'
 import Cookies from 'js-cookie'
 import React, { useState } from 'react'
-import { loginApi } from '@/helpers/utils'
+import { authApi } from '@/helpers/utils'
 import { useRouter } from 'next/router'
 
 const cookie = require('cookie')
@@ -18,7 +18,7 @@ const Login = () => {
     setIsLoading(true)
     const expires = new Date()
     expires.setSeconds(expires.getSeconds() + 86400)
-    loginApi({
+    authApi({
       endpoint: '/login',
       payload: values,
     })
@@ -135,9 +135,7 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item>
-            <Link href="/forgot-password">
-              Lupa password?
-            </Link>
+            <Link href="/forgot-password">Lupa password?</Link>
           </Form.Item>
 
           <Form.Item>

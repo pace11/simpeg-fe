@@ -3,9 +3,8 @@
 import { Button, Form, Input, Row, Card, notification } from 'antd'
 import Link from 'next/link'
 import { MailTwoTone } from '@ant-design/icons'
-import Cookies from 'js-cookie'
 import React, { useState } from 'react'
-import { loginApi } from '@/helpers/utils'
+import { authApi } from '@/helpers/utils'
 import { useRouter } from 'next/router'
 
 const ForgotPassword = () => {
@@ -14,28 +13,40 @@ const ForgotPassword = () => {
 
   const onFinish = (values) => {
     setIsLoading(true)
-    const expires = new Date()
-    expires.setSeconds(expires.getSeconds() + 86400)
-    loginApi({
-      endpoint: '/login',
+    authApi({
+      endpoint: '/forgot-password',
       payload: values,
     })
       .then((res) => {
-        if (res?.status === 200) {
+        setIsLoading(false)
+        notification.success({
+          message: 'Info',
+          description: res?.data?.message,
+          duration: 1,
+        })
+        router.push({
+          pathname: '/change-password',
+          query: { token: res?.data?.data?.token },
+        })
+      })
+      .catch((err) => {
+        if ([404].includes(err?.response?.status)) {
           setIsLoading(false)
-          Cookies.set('token_simpeg', res?.data?.data?.token, {
-            expires,
-            path: '/',
-          })
-          notification.success({
+          notification.warning({
             message: 'Info',
-            description: res?.data?.message,
+            description: err?.response?.data?.message,
             duration: 1,
           })
-          router.push({ pathname: '/' })
+        }
+        if ([500].includes(err?.response?.status)) {
+          setIsLoading(false)
+          notification.warning({
+            message: 'Error',
+            description: 'Internal server error',
+            duration: 1,
+          })
         }
       })
-      .catch((err) => err)
   }
 
   // const onFinishFailed = (errorInfo) => {
@@ -63,7 +74,7 @@ const ForgotPassword = () => {
             fontWeight: 'bold',
           }}
         >
-          FORGOT PASSWORD
+          LUPA PASSWORD
         </h2>
         <Form
           name="basic"

@@ -13,6 +13,7 @@ export function middleware(request) {
 		|| pathname.startsWith("/static") // exclude static files
 		|| pathname.startsWith("/register")
 		|| pathname.startsWith("/forgot-password")
+		|| pathname.startsWith("/change-password")
 		|| PUBLIC_FILE.test(pathname) // exclude all files in the public folder
 	  ) {
 
