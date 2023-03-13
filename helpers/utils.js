@@ -106,3 +106,22 @@ export const deleteApi = async ({ endpoint }) => {
     throw error
   }
 }
+
+export const randomColor = () => {
+  const color = [
+    '#f9ca24',
+    '#f0932b',
+    '#f9ca24',
+    '#6ab04c',
+    '#5B8FF9',
+    '#5B8FF9',
+    '#eb4d4b',
+    '#eb4d4b',
+    '#be2edd',
+    '#e056fd',
+    '#7ed6df',
+    '#30336b',
+  ]
+  const randomNumber = Math.round(Math.random() * (color.length - 0) + 0)
+  return color[randomNumber]
+}
