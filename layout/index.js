@@ -24,6 +24,9 @@ const LayoutApp = ({ children }) => {
   })
   const [collapsed, setCollapsed] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState(null)
+  const [itemBreadcrumbs, setItemBreadcrumbs] = useState([
+    { href: '/', title: 'Beranda' },
+  ])
   const {
     token: { colorBgContainer },
   } = theme.useToken()
@@ -41,6 +44,14 @@ const LayoutApp = ({ children }) => {
         router.replace(
           `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${key}`,
         )
+    }
+    if (selectedKeys.toString() !== '/') {
+      setItemBreadcrumbs((itemBreadcrumbs) => [
+        { ...itemBreadcrumbs[0] },
+        { title: selectedKeys.toString() },
+      ])
+    } else {
+      setItemBreadcrumbs([{ href: '/', title: 'Beranda' }])
     }
     setSelectedKeys(selectedKeys)
   }
@@ -63,7 +74,17 @@ const LayoutApp = ({ children }) => {
     const arrRouter =
       router?.asPath === '/' ? router?.asPath : newRouter
     setSelectedKeys(arrRouter)
+    if (arrRouter !== '/') {
+      setItemBreadcrumbs((itemBreadcrumbs) => [
+        { ...itemBreadcrumbs[0] },
+        { title: arrRouter.toString() },
+      ])
+    } else {
+      setItemBreadcrumbs([{ href: '/', title: 'Beranda' }])
+    }
   }, [router.asPath])
+
+  console.log(itemBreadcrumbs)
 
   return (
     <>
@@ -134,7 +155,7 @@ const LayoutApp = ({ children }) => {
               style={{
                 margin: '16px 0',
               }}
-              items={[{ title: 'Home' }]}
+              items={itemBreadcrumbs}
             />
             {children}
           </Content>

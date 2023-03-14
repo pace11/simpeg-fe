@@ -8,6 +8,7 @@ import {
   Modal,
   notification,
   Tag,
+  Input,
 } from 'antd'
 import {
   PlusOutlined,
@@ -50,7 +51,7 @@ const Pegawai = () => {
           endpoint: `/pegawai/delete/${params.id}`,
         })
           .then((res) => {
-            reloadData()
+            reloadData('')
             notification.success({
               message: 'Info',
               description: res?.data?.message,
@@ -207,7 +208,18 @@ const Pegawai = () => {
       bordered={false}
       extra={[
         <Space key="action-jabatan">
-          <Button icon={<ReloadOutlined />} onClick={reloadData}>
+          <Input.Search
+            placeholder="Cari nama ..."
+            onSearch={(val) => reloadData(`?nama=${val}`)}
+            allowClear
+            style={{
+              width: 250,
+            }}
+          />
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={() => reloadData('')}
+          >
             Refresh data
           </Button>
           <Button
@@ -234,7 +246,7 @@ const Pegawai = () => {
           isOpenAdd={isOpenAdd}
           onClose={() => {
             setOpenAdd(false)
-            reloadData()
+            reloadData('')
           }}
         />
       )}
@@ -243,7 +255,7 @@ const Pegawai = () => {
           isOpen={isOpenEdit}
           onClose={() => {
             setOpenEdit(false)
-            reloadData()
+            reloadData('')
           }}
         />
       )}

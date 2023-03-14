@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { Card, Button, Table, Space, Modal, notification } from 'antd'
+import {
+  Card,
+  Button,
+  Table,
+  Space,
+  Modal,
+  Input,
+  notification,
+} from 'antd'
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -40,7 +48,7 @@ const Jabatan = () => {
           endpoint: `/jabatan/delete/${params.id}`,
         })
           .then((res) => {
-            reloadData()
+            reloadData('')
             notification.success({
               message: 'Info',
               description: res?.data?.message,
@@ -118,6 +126,14 @@ const Jabatan = () => {
       bordered={false}
       extra={[
         <Space key="action-jabatan">
+          <Input.Search
+            placeholder="Cari title ..."
+            onSearch={(val) => reloadData(`?title=${val}`)}
+            allowClear
+            style={{
+              width: 250,
+            }}
+          />
           <Button icon={<ReloadOutlined />} onClick={reloadData}>
             Refresh data
           </Button>
@@ -143,7 +159,7 @@ const Jabatan = () => {
           isOpenAdd={isOpenAdd}
           onClose={() => {
             setOpenAdd(false)
-            reloadData()
+            reloadData('')
           }}
         />
       )}
@@ -152,7 +168,7 @@ const Jabatan = () => {
           isOpen={isOpenEdit}
           onClose={() => {
             setOpenEdit(false)
-            reloadData()
+            reloadData('')
           }}
         />
       )}
