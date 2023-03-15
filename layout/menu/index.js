@@ -4,6 +4,7 @@ import {
   StarOutlined,
   SafetyCertificateOutlined,
   UsergroupAddOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons'
 
 module.exports = [
@@ -31,5 +32,10 @@ module.exports = [
     key: 'agama',
     icon: <HeartOutlined />,
     label: 'Agama',
+  },
+  {
+    key: 'trash',
+    icon: <DeleteOutlined />,
+    label: 'Trash',
   },
 ]

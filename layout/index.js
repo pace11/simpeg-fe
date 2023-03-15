@@ -9,8 +9,9 @@ import {
   Typography,
   Dropdown,
   Row,
+  Tag,
 } from 'antd'
-import { DatabaseOutlined } from '@ant-design/icons'
+import { DatabaseOutlined, UserOutlined } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import Menus from './menu'
 
@@ -141,6 +142,13 @@ const LayoutApp = ({ children }) => {
                 }}
               >
                 {userDetail?.data?.email}
+                <Tag
+                  color="green"
+                  icon={<UserOutlined />}
+                  style={{ marginLeft: '5px' }}
+                >
+                  Admin
+                </Tag>
               </Dropdown.Button>
             </Row>
           </Header>

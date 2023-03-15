@@ -14,6 +14,7 @@ export function middleware(request) {
 		|| pathname.startsWith("/register")
 		|| pathname.startsWith("/forgot-password")
 		|| pathname.startsWith("/change-password")
+		|| pathname.startsWith("/register")
 		|| PUBLIC_FILE.test(pathname) // exclude all files in the public folder
 	  ) {
 

@@ -134,7 +134,7 @@ const Golongan = () => {
               width: 250,
             }}
           />
-          <Button icon={<ReloadOutlined />} onClick={reloadData}>
+          <Button icon={<ReloadOutlined />} onClick={() => reloadData('')}>
             Refresh data
           </Button>
           <Button

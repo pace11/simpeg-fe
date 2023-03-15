@@ -107,6 +107,21 @@ export const deleteApi = async ({ endpoint }) => {
   }
 }
 
+export const restoreApi = async ({ endpoint }) => {
+  try {
+    const result = await Axios({
+      method: 'POST',
+      url: `${process.env.NEXT_PUBLIC_API}${endpoint}`,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token_simpeg')}`,
+      },
+    })
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 export const randomColor = () => {
   const color = [
     '#f9ca24',
