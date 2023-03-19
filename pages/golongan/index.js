@@ -18,6 +18,7 @@ import {
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
+import { SORTING } from '@/constants'
 import dayjs from 'dayjs'
 
 const Add = dynamic(() => import('./drawer/add'))
@@ -68,7 +69,7 @@ const Golongan = () => {
             if ([500].includes(err?.response?.status)) {
               notification.error({
                 message: 'Error',
-                description: 'Internal server error',
+                description: err?.response?.statusText,
                 duration: 1,
               })
             }
@@ -83,11 +84,13 @@ const Golongan = () => {
       title: 'ID',
       key: 'id',
       dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Golongan',
       key: 'title',
       dataIndex: 'title',
+      sorter: (a, b) => a.title - b.title,
     },
     {
       title: 'Tanggal Dibuat',
@@ -119,6 +122,10 @@ const Golongan = () => {
       ),
     },
   ]
+
+  const onChange = (pagination, filters, sorter, extra) => {
+    reloadData(`?sort=${sorter?.field}&direction=${sorter?.order ? SORTING[sorter?.order] : ''}`)
+  };
 
   return (
     <Card
@@ -153,6 +160,7 @@ const Golongan = () => {
         dataSource={data?.data}
         columns={columns}
         loading={isLoading}
+        onChange={onChange}
       />
       {isOpenAdd && (
         <Add

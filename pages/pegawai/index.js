@@ -21,6 +21,7 @@ import {
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
+import { SORTING } from '@/constants'
 import dayjs from 'dayjs'
 
 const Add = dynamic(() => import('./drawer/add'))
@@ -71,7 +72,7 @@ const Pegawai = () => {
             if ([500].includes(err?.response?.status)) {
               notification.error({
                 message: 'Error',
-                description: 'Internal server error',
+                description: err?.response?.statusText,
                 duration: 1,
               })
             }
@@ -86,6 +87,7 @@ const Pegawai = () => {
       title: 'Nama',
       key: 'nama',
       dataIndex: 'nama',
+      sorter: (a, b) => a.nama - b.nama,
     },
     {
       title: 'Kepala Sekolah',
@@ -202,6 +204,10 @@ const Pegawai = () => {
     },
   ]
 
+  const onChange = (pagination, filters, sorter, extra) => {
+    reloadData(`?sort=${sorter?.field}&direction=${sorter?.order ? SORTING[sorter?.order] : ''}`)
+  };
+
   return (
     <Card
       title="Pegawai"
@@ -238,6 +244,7 @@ const Pegawai = () => {
         dataSource={data?.data}
         columns={columns}
         loading={isLoading}
+        onChange={onChange}
         style={{ width: '100%' }}
         scroll={{ x: 1300 }}
       />

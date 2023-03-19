@@ -46,6 +46,14 @@ const Login = () => {
             duration: 1,
           })
         }
+        if ([500].includes(err?.response?.status)) {
+          setIsLoading(false)
+          notification.error({
+            message: 'Error',
+            description: err?.response?.statusText,
+            duration: 1,
+          })
+        }
       })
   }
 

@@ -85,8 +85,6 @@ const LayoutApp = ({ children }) => {
     }
   }, [router.asPath])
 
-  console.log(itemBreadcrumbs)
-
   return (
     <>
       <Head>

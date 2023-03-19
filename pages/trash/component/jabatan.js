@@ -52,7 +52,7 @@ const Jabatan = () => {
             if ([500].includes(err?.response?.status)) {
               notification.error({
                 message: 'Error',
-                description: 'Internal server error',
+                description: err?.response?.statusText,
                 duration: 1,
               })
             }

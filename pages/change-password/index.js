@@ -34,7 +34,16 @@ const ChangePassword = () => {
           router.push({ pathname: '/login' })
         }, 1000)
       })
-      .catch(() => {})
+      .catch((err) => {
+        if ([500].includes(err?.response?.status)) {
+          setIsLoading(false)
+          notification.error({
+            message: 'Error',
+            description: err?.response?.statusText,
+            duration: 1,
+          })
+        }
+      })
   }
 
   // const onFinishFailed = (errorInfo) => {
