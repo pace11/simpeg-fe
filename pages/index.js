@@ -1,4 +1,9 @@
-import { Row, Col, Card } from 'antd'
+import { Row, Col, Card, Statistic } from 'antd'
+import {
+  StarOutlined,
+  SafetyCertificateOutlined,
+  HeartOutlined,
+} from '@ant-design/icons'
 import BarChart from '@/components/bar-chart'
 import PieChart from '@/components/pie-chart'
 import { HookSwr } from '@/lib/hooks/HookSwr'
@@ -12,9 +17,38 @@ export default function Home() {
 
   return (
     <>
+      <Row gutter={14} style={{ marginBottom: '15px' }}>
+        <Col span={8}>
+          <Card bordered={false}>
+            <Statistic
+              title="Total Golongan"
+              value={golongan.length}
+              prefix={<StarOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card bordered={false}>
+            <Statistic
+              title="Total Jabatan"
+              value={jabatan.length}
+              prefix={<SafetyCertificateOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card bordered={false}>
+            <Statistic
+              title="Total Agama"
+              value={agama.length}
+              prefix={<HeartOutlined />}
+            />
+          </Card>
+        </Col>
+      </Row>
       <Row gutter={14}>
         <Col span={8}>
-          <Card title="Total Golongan" bordered={false}>
+          <Card title="Grafik Golongan" bordered={false}>
             <BarChart
               data={{
                 labels:
@@ -38,7 +72,7 @@ export default function Home() {
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Total Jabatan" bordered={false}>
+          <Card title="Grafik Jabatan" bordered={false}>
             <PieChart
               data={{
                 labels:
@@ -62,7 +96,7 @@ export default function Home() {
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Total Agama" bordered={false}>
+          <Card title="Grafik Agama" bordered={false}>
             <BarChart
               data={{
                 labels:

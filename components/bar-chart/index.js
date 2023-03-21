@@ -31,6 +31,13 @@ const BarChart = ({ data }) => {
           return value > 0 ? value : null
         },
       },
+      tooltip: {
+        callbacks: {
+          label(tooltipItems) {
+            return `${tooltipItems.formattedValue} Pegawai`
+          },
+        },
+      },
     },
   }
 
