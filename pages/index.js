@@ -3,6 +3,7 @@ import {
   StarOutlined,
   SafetyCertificateOutlined,
   HeartOutlined,
+  UsergroupAddOutlined
 } from '@ant-design/icons'
 import BarChart from '@/components/bar-chart'
 import PieChart from '@/components/pie-chart'
@@ -14,11 +15,21 @@ export default function Home() {
   const golongan = dataCharts?.data?.golongan ?? []
   const jabatan = dataCharts?.data?.jabatan ?? []
   const agama = dataCharts?.data?.agama ?? []
+  const pegawai = dataCharts?.data?.pegawai ?? 0
 
   return (
     <>
       <Row gutter={14} style={{ marginBottom: '15px' }}>
-        <Col span={8}>
+        <Col span={6}>
+          <Card bordered={false}>
+            <Statistic
+              title="Total Pegawai"
+              value={pegawai}
+              prefix={<UsergroupAddOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
           <Card bordered={false}>
             <Statistic
               title="Total Golongan"
@@ -27,7 +38,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Card bordered={false}>
             <Statistic
               title="Total Jabatan"
@@ -36,7 +47,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Card bordered={false}>
             <Statistic
               title="Total Agama"
