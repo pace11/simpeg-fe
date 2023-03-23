@@ -1,9 +1,9 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
-    "dev": "cp .env.local .env && next dev",
+    "dev": "cp .env.loc .env && next dev",
     "dev:staging": "cp .env.staging .env && next dev",
     "build": "next build",
     "start": "next start",

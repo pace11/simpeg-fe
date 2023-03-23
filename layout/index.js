@@ -170,7 +170,8 @@ const LayoutApp = ({ children }) => {
               textAlign: 'center',
             }}
           >
-            SIMPEG - SMKN 2 Jayapura
+            SIMPEG - SMKN 2 Jayapura -
+            <b>{` v${process.env.NEXT_PUBLIC_APP_VERSION}`}</b>
           </Footer>
         </Layout>
       </Layout>
