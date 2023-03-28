@@ -183,7 +183,7 @@ const Pegawai = () => {
     {
       title: 'Aksi',
       render: (item) => (
-        <Space>
+        <Space direction="vertical">
           <Button
             type="dashed"
             icon={<EditOutlined />}
@@ -205,8 +205,12 @@ const Pegawai = () => {
   ]
 
   const onChange = (pagination, filters, sorter, extra) => {
-    reloadData(`?sort=${sorter?.field}&direction=${sorter?.order ? SORTING[sorter?.order] : ''}`)
-  };
+    reloadData(
+      `?sort=${sorter?.field}&direction=${
+        sorter?.order ? SORTING[sorter?.order] : ''
+      }`,
+    )
+  }
 
   return (
     <Card
@@ -229,7 +233,6 @@ const Pegawai = () => {
             Refresh data
           </Button>
           <Button
-            style={{ marginLeft: '10px' }}
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setOpenAdd(true)}

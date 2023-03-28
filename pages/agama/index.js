@@ -102,7 +102,7 @@ const Agama = () => {
     {
       title: 'Aksi',
       render: (item) => (
-        <Space>
+        <Space direction="vertical">
           <Button
             type="dashed"
             icon={<EditOutlined />}
@@ -148,7 +148,6 @@ const Agama = () => {
             Refresh data
           </Button>
           <Button
-            style={{ marginLeft: '10px' }}
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setOpenAdd(true)}
