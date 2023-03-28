@@ -6,9 +6,8 @@ import {
   Table,
   Space,
   Modal,
-  notification,
-  Tag,
   Input,
+  notification,
 } from 'antd'
 import {
   PlusOutlined,
@@ -16,8 +15,6 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
@@ -29,9 +26,9 @@ const Edit = dynamic(() => import('./drawer/edit'))
 
 const { confirm } = Modal
 
-const Pegawai = () => {
+const Keturunan = () => {
   const { data, isLoading, reloadData } = HookSwr({
-    path: '/pegawai',
+    path: '/keturunan',
   })
   const [isOpenAdd, setOpenAdd] = useState(false)
   const [isOpenEdit, setOpenEdit] = useState(false)
@@ -41,7 +38,7 @@ const Pegawai = () => {
       title: 'Hapus data',
       content: (
         <p>
-          Kamu yakin akan menghapus data ini `<b>{params.nama}</b>` ?
+          Kamu yakin akan menghapus data ini `<b>{params.title}</b>` ?
         </p>
       ),
       icon: <ExclamationCircleOutlined />,
@@ -49,7 +46,7 @@ const Pegawai = () => {
       cancelText: 'Tidak',
       onOk: () => {
         deleteApi({
-          endpoint: `/pegawai/delete/${params.id}`,
+          endpoint: `/keturunan/delete/${params.id}`,
         })
           .then((res) => {
             reloadData('')
@@ -84,101 +81,23 @@ const Pegawai = () => {
 
   const columns = [
     {
-      title: 'Nama',
-      key: 'nama',
-      dataIndex: 'nama',
-      sorter: (a, b) => a.nama - b.nama,
+      title: 'ID',
+      key: 'id',
+      dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
     },
     {
-      title: 'Kepala Sekolah',
-      key: 'kepala_sekolah',
-      dataIndex: 'kepala_sekolah',
-      render: (kepala_sekolah) =>
-        kepala_sekolah ? (
-          <Tag color="green" icon={<CheckCircleOutlined />}>
-            Ya
-          </Tag>
-        ) : (
-          <Tag color="magenta" icon={<CloseCircleOutlined />}>
-            Tidak
-          </Tag>
-        ),
+      title: 'Title',
+      key: 'title',
+      dataIndex: 'title',
+      sorter: (a, b) => a.title - b.title,
     },
     {
-      title: 'Nip Lama',
-      key: 'nip_lama',
-      dataIndex: 'nip_lama',
-      render: (nip_lama) => nip_lama || '-',
-    },
-    {
-      title: 'Nip Baru',
-      key: 'nip_baru',
-      dataIndex: 'nip_baru',
-      render: (nip_baru) => nip_baru || '-',
-    },
-    {
-      title: 'Tmt Golongan',
-      key: 'tmt_golongan',
-      dataIndex: 'tmt_golongan',
-      render: (tmt_golongan) =>
-        tmt_golongan
-          ? dayjs(tmt_golongan).format('DD MMMM YYYY')
-          : '-',
-    },
-    {
-      title: 'Tmt Jabatan',
-      key: 'tmt_jabatan',
-      dataIndex: 'tmt_jabatan',
-      render: (tmt_jabatan) =>
-        tmt_jabatan ? dayjs(tmt_jabatan).format('DD MMMM YYYY') : '-',
-    },
-    {
-      title: 'Pendidikan Terakhir',
-      key: 'pendidikan_terakhir',
-      dataIndex: 'pendidikan_terakhir',
-      render: (pendidikan_terakhir) => pendidikan_terakhir?.title || '-',
-    },
-    {
-      title: 'Jurusan',
-      key: 'jurusan',
-      dataIndex: 'jurusan',
-      render: (jurusan) => jurusan || '-',
-    },
-    {
-      title: 'Tahun Lulus',
-      key: 'tahun_lulus',
-      dataIndex: 'tahun_lulus',
-      render: (tahun_lulus) => tahun_lulus || '-',
-    },
-    {
-      title: 'PD/PDP/NPD',
-      key: 'keturunan',
-      dataIndex: 'keturunan',
-      render: (keturunan) => keturunan?.title || '-',
-    },
-    {
-      title: 'Golongan',
-      key: 'golongan',
-      dataIndex: 'golongan',
-      render: (golongan) => golongan?.title || '-',
-    },
-    {
-      title: 'Jabatan',
-      key: 'jabatan',
-      dataIndex: 'jabatan',
-      render: (jabatan) => jabatan?.title || '-',
-    },
-    {
-      title: 'Agama',
-      key: 'agama',
-      dataIndex: 'agama',
-      render: (agama) => agama?.title || '-',
-    },
-    {
-      title: 'Keterangan',
-      key: 'keterangan',
-      dataIndex: 'keterangan',
-      render: (keterangan) => keterangan || '-',
+      title: 'Tanggal Dibuat',
+      key: 'created_at',
+      dataIndex: 'created_at',
+      render: (created_at) =>
+        dayjs(created_at).format('DD MMMM YYYY') || '-',
     },
     {
       title: 'Aksi',
@@ -214,13 +133,13 @@ const Pegawai = () => {
 
   return (
     <Card
-      title="Pegawai"
+      title="Keturunan"
       bordered={false}
       extra={[
-        <Space key="action-pegawai">
+        <Space key="action-keturunan">
           <Input.Search
-            placeholder="Cari nama ..."
-            onSearch={(val) => reloadData(`?nama=${val}`)}
+            placeholder="Cari title ..."
+            onSearch={(val) => reloadData(`?title=${val}`)}
             allowClear
             style={{
               width: 250,
@@ -248,8 +167,6 @@ const Pegawai = () => {
         columns={columns}
         loading={isLoading}
         onChange={onChange}
-        style={{ width: '100%' }}
-        scroll={{ x: 1300 }}
       />
       {isOpenAdd && (
         <Add
@@ -273,4 +190,4 @@ const Pegawai = () => {
   )
 }
 
-export default Pegawai
+export default Keturunan

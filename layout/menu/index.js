@@ -5,6 +5,8 @@ import {
   SafetyCertificateOutlined,
   UsergroupAddOutlined,
   DeleteOutlined,
+  LinkOutlined,
+  PaperClipOutlined,
 } from '@ant-design/icons'
 
 module.exports = [
@@ -32,6 +34,16 @@ module.exports = [
     key: 'agama',
     icon: <HeartOutlined />,
     label: 'Agama',
+  },
+  {
+    key: 'keturunan',
+    icon: <LinkOutlined />,
+    label: 'Keturunan',
+  },
+  {
+    key: 'pendidikan-terakhir',
+    icon: <PaperClipOutlined />,
+    label: 'Pendidikan Terakhir',
   },
   {
     key: 'trash',

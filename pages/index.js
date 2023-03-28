@@ -3,7 +3,7 @@ import {
   StarOutlined,
   SafetyCertificateOutlined,
   HeartOutlined,
-  UsergroupAddOutlined
+  UsergroupAddOutlined,
 } from '@ant-design/icons'
 import BarChart from '@/components/bar-chart'
 import PieChart from '@/components/pie-chart'
@@ -15,6 +15,9 @@ export default function Home() {
   const golongan = dataCharts?.data?.golongan ?? []
   const jabatan = dataCharts?.data?.jabatan ?? []
   const agama = dataCharts?.data?.agama ?? []
+  const keturunan = dataCharts?.data?.keturunan ?? []
+  const pendidikanTerakhir =
+    dataCharts?.data?.pendidikan_terakhir ?? []
   const pegawai = dataCharts?.data?.pegawai ?? 0
 
   return (
@@ -57,7 +60,7 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
-      <Row gutter={14}>
+      <Row gutter={14} style={{ marginBottom: '15px' }}>
         <Col span={8}>
           <Card title="Grafik Golongan" bordered={false}>
             <BarChart
@@ -123,6 +126,56 @@ export default function Home() {
                     backgroundColor:
                       !!agama.length > 0
                         ? agama.map(() => randomColor())
+                        : [],
+                  },
+                ],
+              }}
+            />
+          </Card>
+        </Col>
+      </Row>
+      <Row gutter={14}>
+        <Col span={8}>
+          <Card title="Grafik Keturunan" bordered={false}>
+            <PieChart
+              data={{
+                labels:
+                  !!keturunan.length > 0
+                    ? keturunan.map((item) => item?.name)
+                    : [],
+                datasets: [
+                  {
+                    data:
+                      !!keturunan.length > 0
+                        ? keturunan.map((item) => item.value)
+                        : [],
+                    backgroundColor:
+                      !!keturunan.length > 0
+                        ? keturunan.map(() => randomColor())
+                        : [],
+                  },
+                ],
+              }}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card title="Grafik Pendidikan Terakhir" bordered={false}>
+            <BarChart
+              data={{
+                labels:
+                  !!pendidikanTerakhir.length > 0
+                    ? pendidikanTerakhir.map((item) => item?.name)
+                    : [],
+                datasets: [
+                  {
+                    data:
+                      !!pendidikanTerakhir.length > 0
+                        ? pendidikanTerakhir.map((item) => item.value)
+                        : [],
+                    backgroundColor:
+                      !!pendidikanTerakhir.length > 0
+                        ? pendidikanTerakhir.map(() => randomColor())
                         : [],
                   },
                 ],

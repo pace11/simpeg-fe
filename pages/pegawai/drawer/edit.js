@@ -13,10 +13,13 @@ import {
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { updateApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
-import { PENDIDIKAN_TERAKHIR, PD_PDP_NPD } from '@/constants'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
 export default function Edit({ onClose, isOpen }) {
+  const { data: dataPendidikanTerakhir } = HookSwr({
+    path: '/pendidikan-terakhir',
+  })
+  const { data: dataKeturunan } = HookSwr({ path: '/keturunan' })
   const { data: dataGolongan } = HookSwr({ path: '/golongan' })
   const { data: dataJabatan } = HookSwr({ path: '/jabatan' })
   const { data: dataAgama } = HookSwr({ path: '/agama' })
@@ -50,13 +53,13 @@ export default function Edit({ onClose, isOpen }) {
         ? dayjs(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
         : null,
       kepala_sekolah: values?.kepala_sekolah || false,
-      pendidikan_terakhir: values?.pendidikan_terakhir || null,
       jurusan: values?.jurusan || null,
       tahun_lulus: values?.tahun_lulus
         ? dayjs(new Date(values?.tahun_lulus)).format('YYYY')
         : null,
-      pd_pdp_npd: values?.pd_pdp_npd || null,
       keterangan: values?.keterangan || null,
+      pendidikan_terakhir_id: values?.pendidikan_terakhir_id,
+      keturunan_id: values?.keturunan_id,
       golongan_id: values?.golongan_id,
       jabatan_id: values?.jabatan_id,
       agama_id: values?.agama_id,
@@ -112,13 +115,14 @@ export default function Edit({ onClose, isOpen }) {
           ? dayjs(detailPegawai?.data?.tmt_jabatan)
           : null,
         kepala_sekolah: detailPegawai?.data?.kepala_sekolah,
-        pendidikan_terakhir: detailPegawai?.data?.pendidikan_terakhir,
         jurusan: detailPegawai?.data?.jurusan,
         tahun_lulus: detailPegawai?.data?.tahun_lulus
           ? dayjs(detailPegawai?.data?.tahun_lulus)
           : null,
-        pd_pdp_npd: detailPegawai?.data?.pd_pdp_npd,
         keterangan: detailPegawai?.data?.keterangan,
+        pendidikan_terakhir_id:
+          detailPegawai?.data?.pendidikan_terakhir_id,
+        keturunan_id: detailPegawai?.data?.keturunan_id,
         golongan_id: detailPegawai?.data?.golongan_id,
         jabatan_id: detailPegawai?.data?.jabatan_id,
         agama_id: detailPegawai?.data?.agama_id,
@@ -233,7 +237,7 @@ export default function Edit({ onClose, isOpen }) {
         </Form.Item>
         <Form.Item
           label="Pendidikan terakhir"
-          name="pendidikan_terakhir"
+          name="pendidikan_terakhir_id"
           rules={[
             {
               required: true,
@@ -257,9 +261,9 @@ export default function Edit({ onClose, isOpen }) {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            {PENDIDIKAN_TERAKHIR?.map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
+            {dataPendidikanTerakhir?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
               </Select.Option>
             ))}
           </Select>
@@ -277,7 +281,7 @@ export default function Edit({ onClose, isOpen }) {
         </Form.Item>
         <Form.Item
           label="PD/PDP/NPD"
-          name="pd_pdp_npd"
+          name="keturunan_id"
           rules={[
             {
               required: true,
@@ -301,9 +305,9 @@ export default function Edit({ onClose, isOpen }) {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            {PD_PDP_NPD?.map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
+            {dataKeturunan?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
               </Select.Option>
             ))}
           </Select>

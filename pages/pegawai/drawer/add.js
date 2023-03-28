@@ -13,16 +13,21 @@ import {
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { createApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
-import { PENDIDIKAN_TERAKHIR, PD_PDP_NPD } from '@/constants'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
 export default function Add({ onClose, isOpenAdd }) {
+  const { data: dataPendidikanTerakhir } = HookSwr({
+    path: '/pendidikan-terakhir',
+  })
+  const { data: dataKeturunan } = HookSwr({ path: '/keturunan' })
   const { data: dataGolongan } = HookSwr({ path: '/golongan' })
   const { data: dataJabatan } = HookSwr({ path: '/jabatan' })
   const { data: dataAgama } = HookSwr({ path: '/agama' })
   const refButton = useRef(null)
   const [form] = Form.useForm()
   const [isLoading, setLoading] = useState(false)
+
+  console.log('eta => ', dataKeturunan)
 
   const onSubmitClick = () => {
     // `current` points to the mounted text input element
@@ -47,13 +52,13 @@ export default function Add({ onClose, isOpenAdd }) {
         ? dayjs(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
         : null,
       kepala_sekolah: values?.kepala_sekolah || false,
-      pendidikan_terakhir: values?.pendidikan_terakhir || null,
       jurusan: values?.jurusan || null,
       tahun_lulus: values?.tahun_lulus
         ? dayjs(new Date(values?.tahun_lulus)).format('YYYY')
         : null,
-      pd_pdp_npd: values?.pd_pdp_npd || null,
       keterangan: values?.keterangan || null,
+      pendidikan_terakhir_id: values?.pendidikan_terakhir_id,
+      keturunan_id: values?.keturunan_id,
       golongan_id: values?.golongan_id,
       jabatan_id: values?.jabatan_id,
       agama_id: values?.agama_id,
@@ -197,7 +202,7 @@ export default function Add({ onClose, isOpenAdd }) {
         </Form.Item>
         <Form.Item
           label="Pendidikan terakhir"
-          name="pendidikan_terakhir"
+          name="pendidikan_terakhir_id"
           rules={[
             {
               required: true,
@@ -221,9 +226,9 @@ export default function Add({ onClose, isOpenAdd }) {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            {PENDIDIKAN_TERAKHIR?.map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
+            {dataPendidikanTerakhir?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
               </Select.Option>
             ))}
           </Select>
@@ -241,7 +246,7 @@ export default function Add({ onClose, isOpenAdd }) {
         </Form.Item>
         <Form.Item
           label="PD/PDP/NPD"
-          name="pd_pdp_npd"
+          name="keturunan_id"
           rules={[
             {
               required: true,
@@ -265,9 +270,9 @@ export default function Add({ onClose, isOpenAdd }) {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            {PD_PDP_NPD?.map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
+            {dataKeturunan?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
               </Select.Option>
             ))}
           </Select>

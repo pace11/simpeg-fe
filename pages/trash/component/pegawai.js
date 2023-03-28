@@ -125,7 +125,8 @@ const Pegawai = () => {
       title: 'Pendidikan Terakhir',
       key: 'pendidikan_terakhir',
       dataIndex: 'pendidikan_terakhir',
-      render: (pendidikan_terakhir) => pendidikan_terakhir || '-',
+      render: (pendidikan_terakhir) =>
+        pendidikan_terakhir?.title || '-',
     },
     {
       title: 'Jurusan',
@@ -141,9 +142,9 @@ const Pegawai = () => {
     },
     {
       title: 'PD/PDP/NPD',
-      key: 'pd_pdp_npd',
-      dataIndex: 'pd_pdp_npd',
-      render: (pd_pdp_npd) => pd_pdp_npd || '-',
+      key: 'keturunan',
+      dataIndex: 'keturunan',
+      render: (keturunan) => keturunan?.title || '-',
     },
     {
       title: 'Golongan',
