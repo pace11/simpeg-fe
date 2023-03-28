@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react'
-import { notification } from 'antd'
+import { Card, Row, Col, notification } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import { logoutApi } from '@/helpers/utils'
 import Cookies from 'js-cookie'
 
@@ -27,7 +28,15 @@ const Logout = () => {
     }
   }, [])
 
-  return null
+  return (
+    <Card>
+      <Row justify="center" align="middle">
+        <Col>
+          <LoadingOutlined style={{ fontSize: '30px' }} />
+        </Col>
+      </Row>
+    </Card>
+  )
 }
 
 export async function getServerSideProps(context) {

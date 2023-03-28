@@ -57,10 +57,8 @@ const LayoutApp = ({ children }) => {
     setSelectedKeys(selectedKeys)
   }
 
-  const onMenuClick = (e) => {
-    if (e?.key === 'logout') {
-      router.replace(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/logout`)
-    }
+  const onMenuClick = () => {
+    router.push({ pathname: '/logout' })
   }
 
   const items = [
