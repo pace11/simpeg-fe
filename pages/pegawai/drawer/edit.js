@@ -15,7 +15,7 @@ import { updateApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
-export default function Edit({ onClose, isOpen }) {
+export default function Edit({ isMobile, onClose, isOpen }) {
   const { data: dataPendidikanTerakhir } = HookSwr({
     path: '/pendidikan-terakhir',
   })
@@ -132,8 +132,9 @@ export default function Edit({ onClose, isOpen }) {
 
   return (
     <Drawer
-      title="Edit data"
-      width={480}
+      title={isMobile ? false : 'Edit data'}
+      width={isMobile ? '100%' : 480}
+      placement={isMobile ? 'bottom' : 'right'}
       onClose={onClose}
       open={isOpen}
       bodyStyle={{ paddingBottom: 80 }}

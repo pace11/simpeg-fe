@@ -10,7 +10,7 @@ import {
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { createApi } from '@/helpers/utils'
 
-export default function Add({ onClose, isOpenAdd }) {
+export default function Add({ isMobile, onClose, isOpenAdd }) {
   const refButton = useRef(null)
   const [form] = Form.useForm()
   const [isLoading, setLoading] = useState(false)
@@ -57,9 +57,13 @@ export default function Add({ onClose, isOpenAdd }) {
 
   return (
     <Drawer
-      title="Tambah data"
-      width={480}
-      onClose={onClose}
+      title={isMobile ? false : 'Tambah data'}
+      width={isMobile ? '100%' : 480}
+      placement={isMobile ? 'bottom' : 'right'}
+      onClose={() => {
+        onClose()
+        form.resetFields()
+      }}
       open={isOpenAdd}
       bodyStyle={{ paddingBottom: 80 }}
       extra={

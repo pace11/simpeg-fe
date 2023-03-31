@@ -137,6 +137,8 @@ export const randomColor = () => {
     '#7ed6df',
     '#30336b',
   ]
-  const randomNumber = Math.round(Math.random() * (color.length - 0) + 0)
+  const randomNumber = Math.round(
+    Math.random() * (color.length - 0) + 0,
+  )
   return color[randomNumber]
 }

@@ -15,6 +15,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  SelectOutlined,
+  MoreOutlined,
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
@@ -24,9 +26,7 @@ import dayjs from 'dayjs'
 const Add = dynamic(() => import('./drawer/add'))
 const Edit = dynamic(() => import('./drawer/edit'))
 
-const { confirm } = Modal
-
-const Golongan = () => {
+const Golongan = ({ isMobile }) => {
   const { data, isLoading, reloadData } = HookSwr({
     path: '/golongan',
   })
@@ -34,7 +34,7 @@ const Golongan = () => {
   const [isOpenEdit, setOpenEdit] = useState(false)
 
   const showConfirmDelete = (params) => {
-    confirm({
+    Modal.confirm({
       title: 'Hapus data',
       content: (
         <p>
@@ -124,35 +124,88 @@ const Golongan = () => {
   ]
 
   const onChange = (pagination, filters, sorter, extra) => {
-    reloadData(`?sort=${sorter?.field}&direction=${sorter?.order ? SORTING[sorter?.order] : ''}`)
-  };
+    reloadData(
+      `?sort=${sorter?.field}&direction=${
+        sorter?.order ? SORTING[sorter?.order] : ''
+      }`,
+    )
+  }
 
-  return (
-    <Card
-      title="Golongan"
-      bordered={false}
-      extra={[
-        <Space key="action-golongan">
+  const extraMobilePopup = () => {
+    Modal.info({
+      title: 'Aksi',
+      content: (
+        <Space key="mobile-action-golongan" direction="vertical">
           <Input.Search
-            placeholder="Cari golongan ..."
+            placeholder="Cari title ..."
             onSearch={(val) => reloadData(`?title=${val}`)}
             allowClear
             style={{
               width: 250,
             }}
           />
-          <Button icon={<ReloadOutlined />} onClick={() => reloadData('')}>
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={() => reloadData('')}
+            block
+          >
             Refresh data
           </Button>
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setOpenAdd(true)}
+            block
           >
             Tambah data
           </Button>
-        </Space>,
-      ]}
+        </Space>
+      ),
+      icon: <SelectOutlined />,
+    })
+  }
+
+  const extraDesktop = [
+    <Space key="desktop-action-golongan">
+      <Input.Search
+        placeholder="Cari title ..."
+        onSearch={(val) => reloadData(`?title=${val}`)}
+        allowClear
+        style={{
+          width: 250,
+        }}
+      />
+      <Button
+        icon={<ReloadOutlined />}
+        onClick={() => reloadData('')}
+      >
+        Refresh data
+      </Button>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => setOpenAdd(true)}
+      >
+        Tambah data
+      </Button>
+    </Space>,
+  ]
+
+  const extraMobile = [
+    <Space key="action-golongan">
+      <Button
+        onClick={() => extraMobilePopup()}
+        icon={<MoreOutlined />}
+        size="middle"
+      />
+    </Space>,
+  ]
+
+  return (
+    <Card
+      title="Golongan"
+      bordered={false}
+      extra={isMobile ? extraMobile : extraDesktop}
     >
       <Table
         rowKey="key"
@@ -160,21 +213,27 @@ const Golongan = () => {
         columns={columns}
         loading={isLoading}
         onChange={onChange}
+        style={{ width: '100%' }}
+        scroll={{ x: 425 }}
       />
       {isOpenAdd && (
         <Add
+          isMobile={isMobile}
           isOpenAdd={isOpenAdd}
           onClose={() => {
             setOpenAdd(false)
+            Modal.destroyAll()
             reloadData('')
           }}
         />
       )}
       {isOpenEdit && (
         <Edit
+          isMobile={isMobile}
           isOpen={isOpenEdit}
           onClose={() => {
             setOpenEdit(false)
+            Modal.destroyAll()
             reloadData('')
           }}
         />

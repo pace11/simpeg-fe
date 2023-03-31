@@ -10,7 +10,7 @@ import PieChart from '@/components/pie-chart'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { randomColor } from '@/helpers/utils'
 
-export default function Home() {
+export default function Home({ isMobile }) {
   const { data: dataCharts } = HookSwr({ path: '/pegawai/charts' })
   const golongan = dataCharts?.data?.golongan ?? []
   const jabatan = dataCharts?.data?.jabatan ?? []
@@ -22,8 +22,8 @@ export default function Home() {
 
   return (
     <>
-      <Row gutter={14} style={{ marginBottom: '15px' }}>
-        <Col span={6}>
+      <Row gutter={[14, 14]} style={{ marginBottom: '15px' }}>
+        <Col span={isMobile ? 24 : 6}>
           <Card bordered={false}>
             <Statistic
               title="Total Pegawai"
@@ -32,7 +32,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={isMobile ? 24 : 6}>
           <Card bordered={false}>
             <Statistic
               title="Total Golongan"
@@ -41,7 +41,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={isMobile ? 24 : 6}>
           <Card bordered={false}>
             <Statistic
               title="Total Jabatan"
@@ -50,7 +50,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={isMobile ? 24 : 6}>
           <Card bordered={false}>
             <Statistic
               title="Total Agama"
@@ -60,8 +60,8 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
-      <Row gutter={14} style={{ marginBottom: '15px' }}>
-        <Col span={8}>
+      <Row gutter={[14, 14]} style={{ marginBottom: '15px' }}>
+        <Col span={isMobile ? 24 : 8}>
           <Card title="Grafik Golongan" bordered={false}>
             <BarChart
               data={{
@@ -85,7 +85,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={isMobile ? 24 : 8}>
           <Card title="Grafik Jabatan" bordered={false}>
             <PieChart
               data={{
@@ -109,7 +109,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={isMobile ? 24 : 8}>
           <Card title="Grafik Agama" bordered={false}>
             <BarChart
               data={{
@@ -134,8 +134,8 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
-      <Row gutter={14}>
-        <Col span={8}>
+      <Row gutter={[14, 14]}>
+        <Col span={isMobile ? 24 : 8}>
           <Card title="Grafik Keturunan" bordered={false}>
             <PieChart
               data={{
@@ -159,7 +159,7 @@ export default function Home() {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={isMobile ? 24 : 8}>
           <Card title="Grafik Pendidikan Terakhir" bordered={false}>
             <BarChart
               data={{

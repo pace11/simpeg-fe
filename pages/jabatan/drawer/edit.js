@@ -11,7 +11,7 @@ import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { updateApi } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
-export default function Edit({ onClose, isOpen }) {
+export default function Edit({ isMobile, onClose, isOpen }) {
   const { data: detailJabatan } = HookSwr({
     path: isOpen ? `/jabatan/${isOpen}` : '',
   })
@@ -69,8 +69,9 @@ export default function Edit({ onClose, isOpen }) {
 
   return (
     <Drawer
-      title="Edit data"
-      width={480}
+      title={isMobile ? false : 'Edit data'}
+      width={isMobile ? '100%' : 480}
+      placement={isMobile ? 'bottom' : 'right'}
       onClose={onClose}
       open={isOpen}
       bodyStyle={{ paddingBottom: 80 }}

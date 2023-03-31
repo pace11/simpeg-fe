@@ -15,7 +15,7 @@ import { createApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 
-export default function Add({ onClose, isOpenAdd }) {
+export default function Add({ isMobile, onClose, isOpenAdd }) {
   const { data: dataPendidikanTerakhir } = HookSwr({
     path: '/pendidikan-terakhir',
   })
@@ -99,8 +99,9 @@ export default function Add({ onClose, isOpenAdd }) {
 
   return (
     <Drawer
-      title="Tambah data"
-      width={480}
+      title={isMobile ? false : 'Tambah data'}
+      width={isMobile ? '100%' : 480}
+      placement={isMobile ? 'bottom' : 'right'}
       onClose={() => {
         onClose()
         form.resetFields()

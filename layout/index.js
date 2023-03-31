@@ -10,6 +10,7 @@ import {
   Dropdown,
   Row,
   Tag,
+  Tabs,
 } from 'antd'
 import { DatabaseOutlined, UserOutlined } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
@@ -18,7 +19,7 @@ import Menus from './menu'
 const { Title } = Typography
 const { Header, Content, Footer, Sider } = Layout
 
-const LayoutApp = ({ children }) => {
+const LayoutApp = ({ children, isMobile }) => {
   const router = useRouter()
   const { data: userDetail, isLoading } = HookSwr({
     path: '/user/me',
@@ -28,6 +29,7 @@ const LayoutApp = ({ children }) => {
   const [itemBreadcrumbs, setItemBreadcrumbs] = useState([
     { href: '/', title: 'Beranda' },
   ])
+  const [activeKey, setActiveKey] = useState('/')
   const {
     token: { colorBgContainer },
   } = theme.useToken()
@@ -73,6 +75,7 @@ const LayoutApp = ({ children }) => {
     const arrRouter =
       router?.asPath === '/' ? router?.asPath : newRouter
     setSelectedKeys(arrRouter)
+    setActiveKey(arrRouter !== '/' ? `${arrRouter.toString()}` : '/')
     if (arrRouter !== '/') {
       setItemBreadcrumbs((itemBreadcrumbs) => [
         { ...itemBreadcrumbs[0] },
@@ -100,6 +103,7 @@ const LayoutApp = ({ children }) => {
       <Layout
         style={{
           height: '100vh',
+          width: '100%',
         }}
       >
         <Sider
@@ -107,6 +111,7 @@ const LayoutApp = ({ children }) => {
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
           style={{ background: colorBgContainer }}
+          hidden={isMobile}
         >
           <Menu
             onSelect={HandleMenuSelect}
@@ -121,23 +126,23 @@ const LayoutApp = ({ children }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '0 20px',
+              padding: '0 15px',
               background: colorBgContainer,
             }}
           >
             <Title style={{ margin: 0, padding: 0 }} level={5}>
-              <DatabaseOutlined /> DASHBOARD SIMPEG
+              <DatabaseOutlined /> SIMPEG
             </Title>
             <Row>
               <Dropdown.Button
-                size="large"
+                size="middle"
                 loading={isLoading}
                 menu={{
                   items,
                   onClick: onMenuClick,
                 }}
               >
-                {userDetail?.data?.email}
+                {!isMobile ? userDetail?.data?.email : ''}
                 <Tag
                   color="green"
                   icon={<UserOutlined />}
@@ -153,6 +158,7 @@ const LayoutApp = ({ children }) => {
             style={{
               margin: '0 15px',
               overflowY: 'scroll',
+              paddingBottom: '15px',
             }}
           >
             <Breadcrumb
@@ -164,12 +170,43 @@ const LayoutApp = ({ children }) => {
             {children}
           </Content>
           <Footer
-            style={{
-              textAlign: 'center',
-            }}
+            style={
+              isMobile
+                ? {
+                    padding: '0 15px',
+                    background: '#FFF',
+                  }
+                : { textAlign: 'center' }
+            }
           >
-            SIMPEG - SMKN 2 Jayapura -
-            <b>{` v${process.env.NEXT_PUBLIC_APP_VERSION}`}</b>
+            {isMobile ? (
+              <Tabs
+                defaultActiveKey="/"
+                activeKey={activeKey}
+                items={Menus.map((item) => {
+                  return {
+                    label: (
+                      <span>
+                        {item?.icon}
+                        {item.label}
+                      </span>
+                    ),
+                    key: item?.key,
+                  }
+                })}
+                onChange={(val) => {
+                  setActiveKey(val)
+                  router.push({
+                    pathname: val === '/' ? '/' : `/${val}`,
+                  })
+                }}
+              />
+            ) : (
+              <span>
+                SIMPEG - SMKN 2 Jayapura -{' '}
+                <b>{` v${process.env.NEXT_PUBLIC_APP_VERSION}`}</b>
+              </span>
+            )}
           </Footer>
         </Layout>
       </Layout>

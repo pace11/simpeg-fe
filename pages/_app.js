@@ -5,10 +5,16 @@ import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }) {
   const isAuthorized = Cookies.get('token_simpeg')
+  const [isMobile, setIsMobile] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
     setHasMounted(true)
+    setIsMobile(
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ),
+    )
   }, [])
 
   if (!hasMounted) {
@@ -16,12 +22,12 @@ export default function App({ Component, pageProps }) {
   }
 
   if (!isAuthorized) {
-    return <Component {...pageProps} />
+    return <Component {...pageProps} isMobile={isMobile} />
   }
 
   return (
-    <Layout>
-      <Component {...pageProps} />
+    <Layout isMobile={isMobile}>
+      <Component {...pageProps} isMobile={isMobile} />
     </Layout>
   )
 }

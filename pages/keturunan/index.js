@@ -15,6 +15,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  SelectOutlined,
+  MoreOutlined,
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { deleteApi } from '@/helpers/utils'
@@ -24,9 +26,7 @@ import dayjs from 'dayjs'
 const Add = dynamic(() => import('./drawer/add'))
 const Edit = dynamic(() => import('./drawer/edit'))
 
-const { confirm } = Modal
-
-const Keturunan = () => {
+const Keturunan = ({ isMobile }) => {
   const { data, isLoading, reloadData } = HookSwr({
     path: '/keturunan',
   })
@@ -34,7 +34,7 @@ const Keturunan = () => {
   const [isOpenEdit, setOpenEdit] = useState(false)
 
   const showConfirmDelete = (params) => {
-    confirm({
+    Modal.confirm({
       title: 'Hapus data',
       content: (
         <p>
@@ -131,12 +131,11 @@ const Keturunan = () => {
     )
   }
 
-  return (
-    <Card
-      title="Keturunan"
-      bordered={false}
-      extra={[
-        <Space key="action-keturunan">
+  const extraMobilePopup = () => {
+    Modal.info({
+      title: 'Aksi',
+      content: (
+        <Space key="mobile-action-keturunan" direction="vertical">
           <Input.Search
             placeholder="Cari title ..."
             onSearch={(val) => reloadData(`?title=${val}`)}
@@ -148,6 +147,7 @@ const Keturunan = () => {
           <Button
             icon={<ReloadOutlined />}
             onClick={() => reloadData('')}
+            block
           >
             Refresh data
           </Button>
@@ -155,11 +155,57 @@ const Keturunan = () => {
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setOpenAdd(true)}
+            block
           >
             Tambah data
           </Button>
-        </Space>,
-      ]}
+        </Space>
+      ),
+      icon: <SelectOutlined />,
+    })
+  }
+
+  const extraDesktop = [
+    <Space key="desktop-action-keturunan">
+      <Input.Search
+        placeholder="Cari title ..."
+        onSearch={(val) => reloadData(`?title=${val}`)}
+        allowClear
+        style={{
+          width: 250,
+        }}
+      />
+      <Button
+        icon={<ReloadOutlined />}
+        onClick={() => reloadData('')}
+      >
+        Refresh data
+      </Button>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => setOpenAdd(true)}
+      >
+        Tambah data
+      </Button>
+    </Space>,
+  ]
+
+  const extraMobile = [
+    <Space key="action-keturunan">
+      <Button
+        onClick={() => extraMobilePopup()}
+        icon={<MoreOutlined />}
+        size="middle"
+      />
+    </Space>,
+  ]
+
+  return (
+    <Card
+      title="Keturunan"
+      bordered={false}
+      extra={isMobile ? extraMobile : extraDesktop}
     >
       <Table
         rowKey="key"
@@ -167,21 +213,27 @@ const Keturunan = () => {
         columns={columns}
         loading={isLoading}
         onChange={onChange}
+        style={{ width: '100%' }}
+        scroll={{ x: 425 }}
       />
       {isOpenAdd && (
         <Add
+          isMobile={isMobile}
           isOpenAdd={isOpenAdd}
           onClose={() => {
             setOpenAdd(false)
+            Modal.destroyAll()
             reloadData('')
           }}
         />
       )}
       {isOpenEdit && (
         <Edit
+          isMobile={isMobile}
           isOpen={isOpenEdit}
           onClose={() => {
             setOpenEdit(false)
+            Modal.destroyAll()
             reloadData('')
           }}
         />
