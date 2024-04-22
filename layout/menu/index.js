@@ -1,12 +1,11 @@
 import {
-  HomeOutlined,
   HeartOutlined,
-  StarOutlined,
-  SafetyCertificateOutlined,
-  UsergroupAddOutlined,
-  DeleteOutlined,
+  HomeOutlined,
   LinkOutlined,
   PaperClipOutlined,
+  SafetyCertificateOutlined,
+  StarOutlined,
+  UsergroupAddOutlined
 } from '@ant-design/icons'
 
 module.exports = [
@@ -44,10 +43,5 @@ module.exports = [
     key: 'pendidikan-terakhir',
     icon: <PaperClipOutlined />,
     label: 'Pendidikan Terakhir',
-  },
-  {
-    key: 'trash',
-    icon: <DeleteOutlined />,
-    label: 'Trash',
   },
 ]

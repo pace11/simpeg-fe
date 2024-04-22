@@ -1,7 +1,8 @@
+import '@/styles/globals.css'
+import 'dayjs/locale/id'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import Layout from '../layout'
-import Cookies from 'js-cookie'
-import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }) {
   const isAuthorized = Cookies.get('token_simpeg')

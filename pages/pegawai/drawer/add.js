@@ -1,19 +1,19 @@
-import { useRef, useState } from 'react'
+import { createApi } from '@/helpers/utils'
+import { HookSwr } from '@/lib/hooks/HookSwr'
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import {
-  Drawer,
-  Space,
   Button,
+  DatePicker,
+  Drawer,
   Form,
   Input,
-  notification,
-  DatePicker,
-  Switch,
   Select,
+  Space,
+  Switch,
+  notification,
 } from 'antd'
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
-import { createApi } from '@/helpers/utils'
 import dayjs from 'dayjs'
-import { HookSwr } from '@/lib/hooks/HookSwr'
+import { useRef, useState } from 'react'
 
 export default function Add({ isMobile, onClose, isOpenAdd }) {
   const { data: dataPendidikanTerakhir } = HookSwr({
@@ -273,7 +273,7 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
           >
             {dataKeturunan?.data?.map((item) => (
               <Select.Option key={item?.id} value={item?.id}>
-                {item?.title}
+                {`${item?.title} (${item?.description})`}
               </Select.Option>
             ))}
           </Select>

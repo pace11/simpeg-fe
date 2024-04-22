@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import Head from 'next/head'
+import { HookSwr } from '@/lib/hooks/HookSwr'
+import { DatabaseOutlined, UserOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
+  Dropdown,
   Layout,
   Menu,
-  theme,
-  Typography,
-  Dropdown,
   Row,
-  Tag,
   Tabs,
+  Tag,
+  Typography,
+  theme,
 } from 'antd'
-import { DatabaseOutlined, UserOutlined } from '@ant-design/icons'
-import { HookSwr } from '@/lib/hooks/HookSwr'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import Menus from './menu'
 
 const { Title } = Typography
@@ -59,11 +59,19 @@ const LayoutApp = ({ children, isMobile }) => {
     setSelectedKeys(selectedKeys)
   }
 
-  const onMenuClick = () => {
-    router.push({ pathname: '/logout' })
+  const onMenuClick = ({ key }) => {
+    const path = {
+      history: '/trash',
+      logout: '/logout',
+    }
+    router.push({ pathname: path[key] })
   }
 
   const items = [
+    {
+      key: 'history',
+      label: 'History',
+    },
     {
       key: 'logout',
       label: 'Logout',
@@ -148,7 +156,7 @@ const LayoutApp = ({ children, isMobile }) => {
                   icon={<UserOutlined />}
                   style={{ marginLeft: '5px' }}
                 >
-                  Admin
+                  {userDetail?.data?.role}
                 </Tag>
               </Dropdown.Button>
             </Row>

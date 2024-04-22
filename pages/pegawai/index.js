@@ -1,30 +1,32 @@
-import { useState } from 'react'
-import dynamic from 'next/dynamic'
+import { SORTING } from '@/constants'
+import { deleteApi } from '@/helpers/utils'
+import { HookSwr } from '@/lib/hooks/HookSwr'
 import {
-  Card,
-  Button,
-  Table,
-  Space,
-  Modal,
-  notification,
-  Tag,
-  Input,
-} from 'antd'
-import {
-  PlusOutlined,
-  ReloadOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
+  EyeOutlined,
   MoreOutlined,
+  PlusOutlined,
+  ReloadOutlined,
   SelectOutlined,
 } from '@ant-design/icons'
-import { HookSwr } from '@/lib/hooks/HookSwr'
-import { deleteApi } from '@/helpers/utils'
-import { SORTING } from '@/constants'
+import {
+  Button,
+  Card,
+  Input,
+  Modal,
+  Space,
+  Table,
+  Tag,
+  notification,
+} from 'antd'
 import dayjs from 'dayjs'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 const Add = dynamic(() => import('./drawer/add'))
 const Edit = dynamic(() => import('./drawer/edit'))
@@ -35,6 +37,7 @@ const Pegawai = ({ isMobile }) => {
   })
   const [isOpenAdd, setOpenAdd] = useState(false)
   const [isOpenEdit, setOpenEdit] = useState(false)
+  const router = useRouter();
 
   const showConfirmDelete = (params) => {
     Modal.confirm({
@@ -93,22 +96,29 @@ const Pegawai = ({ isMobile }) => {
       title: 'Kepala Sekolah',
       key: 'kepala_sekolah',
       dataIndex: 'kepala_sekolah',
-      render: (kepala_sekolah) =>
-        kepala_sekolah ? (
-          <Tag color="green" icon={<CheckCircleOutlined />}>
-            Ya
-          </Tag>
-        ) : (
-          <Tag color="magenta" icon={<CloseCircleOutlined />}>
-            Tidak
-          </Tag>
-        ),
+      render: (kepala_sekolah) => (
+        <Tag
+          color={kepala_sekolah ? 'green' : 'magenta'}
+          icon={
+            kepala_sekolah ? (
+              <CheckCircleOutlined />
+            ) : (
+              <CloseCircleOutlined />
+            )
+          }
+        >
+          {kepala_sekolah ? 'Ya' : 'Tidak'}
+        </Tag>
+      ),
     },
     {
-      title: 'Nip Lama',
-      key: 'nip_lama',
-      dataIndex: 'nip_lama',
-      render: (nip_lama) => nip_lama || '-',
+      title: 'Tanggal Lahir',
+      key: 'tanggal_lahir',
+      dataIndex: 'tanggal_lahir',
+      render: (tanggal_lahir) =>
+        tanggal_lahir
+          ? dayjs(tanggal_lahir).locale('id').format('DD MMMM YYYY')
+          : '-',
     },
     {
       title: 'Nip Baru',
@@ -117,45 +127,8 @@ const Pegawai = ({ isMobile }) => {
       render: (nip_baru) => nip_baru || '-',
     },
     {
-      title: 'Tmt Golongan',
-      key: 'tmt_golongan',
-      dataIndex: 'tmt_golongan',
-      render: (tmt_golongan) =>
-        tmt_golongan
-          ? dayjs(tmt_golongan).format('DD MMMM YYYY')
-          : '-',
-    },
-    {
-      title: 'Tmt Jabatan',
-      key: 'tmt_jabatan',
-      dataIndex: 'tmt_jabatan',
-      render: (tmt_jabatan) =>
-        tmt_jabatan ? dayjs(tmt_jabatan).format('DD MMMM YYYY') : '-',
-    },
-    {
       title: 'Pendidikan Terakhir',
-      key: 'pendidikan_terakhir',
-      dataIndex: 'pendidikan_terakhir',
-      render: (pendidikan_terakhir) =>
-        pendidikan_terakhir?.title || '-',
-    },
-    {
-      title: 'Jurusan',
-      key: 'jurusan',
-      dataIndex: 'jurusan',
-      render: (jurusan) => jurusan || '-',
-    },
-    {
-      title: 'Tahun Lulus',
-      key: 'tahun_lulus',
-      dataIndex: 'tahun_lulus',
-      render: (tahun_lulus) => tahun_lulus || '-',
-    },
-    {
-      title: 'PD/PDP/NPD',
-      key: 'keturunan',
-      dataIndex: 'keturunan',
-      render: (keturunan) => keturunan?.title || '-',
+      render: ({ pendidikan_terakhir, jurusan }) => `${pendidikan_terakhir?.title || '-'} ${jurusan || ''}`,
     },
     {
       title: 'Golongan',
@@ -170,21 +143,16 @@ const Pegawai = ({ isMobile }) => {
       render: (jabatan) => jabatan?.title || '-',
     },
     {
-      title: 'Agama',
-      key: 'agama',
-      dataIndex: 'agama',
-      render: (agama) => agama?.title || '-',
-    },
-    {
-      title: 'Keterangan',
-      key: 'keterangan',
-      dataIndex: 'keterangan',
-      render: (keterangan) => keterangan || '-',
-    },
-    {
       title: 'Aksi',
+      fixed: 'right',
       render: (item) => (
         <Space direction="vertical">
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => router.push(`/pegawai/${item?.id}`) }
+          >
+            Detail
+          </Button>
           <Button
             type="dashed"
             icon={<EditOutlined />}
@@ -297,6 +265,9 @@ const Pegawai = ({ isMobile }) => {
         onChange={onChange}
         style={{ width: '100%' }}
         scroll={{ x: 1300 }}
+        pagination={{
+          showTotal: (total) => `${total} data`,
+        }}
       />
       {isOpenAdd && (
         <Add

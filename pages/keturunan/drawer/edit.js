@@ -1,15 +1,15 @@
-import { useRef, useState, useEffect } from 'react'
-import {
-  Drawer,
-  Space,
-  Button,
-  Form,
-  Input,
-  notification,
-} from 'antd'
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
 import { updateApi } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  Space,
+  notification,
+} from 'antd'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Edit({ isMobile, onClose, isOpen }) {
   const { data: detailKeturunan } = HookSwr({
@@ -63,6 +63,7 @@ export default function Edit({ isMobile, onClose, isOpen }) {
     if (isOpen) {
       form.setFieldsValue({
         title: detailKeturunan?.data?.title,
+        description: detailKeturunan?.data?.description,
       })
     }
   }, [isOpen, form, detailKeturunan])
@@ -126,6 +127,12 @@ export default function Edit({ isMobile, onClose, isOpen }) {
           ]}
         >
           <Input size="large" placeholder="Title ..." />
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          name="description"
+        >
+          <Input size="large" placeholder="Description ..." />
         </Form.Item>
         <Form.Item hidden>
           <Button ref={refButton} type="primary" htmlType="submit">

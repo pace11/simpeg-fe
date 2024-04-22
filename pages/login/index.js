@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-import { Button, Form, Input, Row, Card, notification } from 'antd'
-import Link from 'next/link'
-import { MailTwoTone, LockTwoTone } from '@ant-design/icons'
-import Cookies from 'js-cookie'
-import React, { useState } from 'react'
 import { authApi } from '@/helpers/utils'
+import { LockTwoTone, MailTwoTone } from '@ant-design/icons'
+import { Button, Card, Form, Input, Row, notification } from 'antd'
+import Cookies from 'js-cookie'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 const cookie = require('cookie')
 
@@ -93,6 +94,14 @@ const Login = () => {
         >
           Sistem Informasi Kepegawaian
         </p>
+        <p style={{ textAlign: 'center' }}>
+          <Image
+            src="/logo-smk2.png"
+            alt="logo-smk2"
+            width={100}
+            height={100}
+          />
+        </p>
         <Form
           name="basic"
           labelCol={{
@@ -157,14 +166,14 @@ const Login = () => {
             </Button>
           </Form.Item>
 
-          <Form.Item>
+          {/* <Form.Item>
             <p style={{ textAlign: 'center' }}>
               Belum punya akun sebelumnya?{' '}
               <Link className="register" href="/register">
                 Daftar disini
               </Link>
             </p>
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Card>
     </Row>

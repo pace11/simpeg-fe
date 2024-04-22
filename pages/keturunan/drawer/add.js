@@ -1,14 +1,14 @@
-import { useRef, useState } from 'react'
+import { createApi } from '@/helpers/utils'
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import {
-  Drawer,
-  Space,
   Button,
+  Drawer,
   Form,
   Input,
+  Space,
   notification,
 } from 'antd'
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons'
-import { createApi } from '@/helpers/utils'
+import { useRef, useState } from 'react'
 
 export default function Add({ isMobile, onClose, isOpenAdd }) {
   const refButton = useRef(null)
@@ -117,6 +117,12 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
           ]}
         >
           <Input size="large" placeholder="Title ..." />
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          name="description"
+        >
+          <Input size="large" placeholder="Description ..." />
         </Form.Item>
         <Form.Item hidden>
           <Button ref={refButton} type="primary" htmlType="submit">
