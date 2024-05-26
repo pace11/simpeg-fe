@@ -1,5 +1,5 @@
-import Cookies from 'js-cookie'
 import Axios from 'axios'
+import Cookies from 'js-cookie'
 
 export const getMeApi = async ({ token }) => {
   try {
@@ -76,10 +76,14 @@ export const createApi = async ({ endpoint, payload }) => {
   }
 }
 
-export const updateApi = async ({ endpoint, payload }) => {
+export const updateApi = async ({
+  endpoint,
+  payload,
+  method = 'PATCH',
+}) => {
   try {
     const result = await Axios({
-      method: 'PATCH',
+      method,
       url: `${process.env.NEXT_PUBLIC_API}${endpoint}`,
       data: payload,
       headers: {

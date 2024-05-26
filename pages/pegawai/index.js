@@ -37,7 +37,7 @@ const Pegawai = ({ isMobile }) => {
   })
   const [isOpenAdd, setOpenAdd] = useState(false)
   const [isOpenEdit, setOpenEdit] = useState(false)
-  const router = useRouter();
+  const router = useRouter()
 
   const showConfirmDelete = (params) => {
     Modal.confirm({
@@ -128,7 +128,8 @@ const Pegawai = ({ isMobile }) => {
     },
     {
       title: 'Pendidikan Terakhir',
-      render: ({ pendidikan_terakhir, jurusan }) => `${pendidikan_terakhir?.title || '-'} ${jurusan || ''}`,
+      render: ({ pendidikan_terakhir, jurusan }) =>
+        `${pendidikan_terakhir?.title || '-'} ${jurusan || ''}`,
     },
     {
       title: 'Golongan',
@@ -149,7 +150,7 @@ const Pegawai = ({ isMobile }) => {
         <Space direction="vertical">
           <Button
             icon={<EyeOutlined />}
-            onClick={() => router.push(`/pegawai/${item?.id}`) }
+            onClick={() => router.push(`/pegawai/${item?.id}`)}
           >
             Detail
           </Button>

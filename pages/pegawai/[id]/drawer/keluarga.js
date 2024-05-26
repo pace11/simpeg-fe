@@ -1,4 +1,4 @@
-import { createApi } from '@/helpers/utils'
+import { updateApi } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons'
 import {
@@ -9,26 +9,39 @@ import {
   Input,
   Select,
   Space,
-  Switch,
   notification,
 } from 'antd'
 import dayjs from 'dayjs'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-export default function Add({ isMobile, onClose, isOpenAdd }) {
-  const { data: dataPendidikanTerakhir } = HookSwr({
-    path: '/pendidikan-terakhir',
-  })
-  const { data: dataKeturunan } = HookSwr({ path: '/keturunan' })
-  const { data: dataGolongan } = HookSwr({ path: '/golongan' })
-  const { data: dataJabatan } = HookSwr({ path: '/jabatan' })
-  const { data: dataAgama } = HookSwr({ path: '/agama' })
+export default function KeluargaModal({
+  isMobile,
+  onClose,
+  id,
+  data,
+}) {
   const refButton = useRef(null)
   const [form] = Form.useForm()
   const [isLoading, setLoading] = useState(false)
 
+  const { data: dataAgama } = HookSwr({ path: '/agama' })
+  const { data: dataPendidikanKk } = HookSwr({
+    path: '/pendidikan-kk',
+  })
+  const { data: dataStatusPerkawinanKk } = HookSwr({
+    path: '/status-perkawinan-kk',
+  })
+  const { data: dataStatusHubunganKk } = HookSwr({
+    path: '/status-hubungan-kk',
+  })
+  const { data: dataJenisPekerjaanKk } = HookSwr({
+    path: '/jenis-pekerjaan-kk',
+  })
+  const { data: detailKeluarga } = HookSwr({
+    path: data?.id ? `/keluarga/${data?.id}` : '',
+  })
+
   const onSubmitClick = () => {
-    // `current` points to the mounted text input element
     refButton.current.click()
   }
 
@@ -36,35 +49,34 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
     setLoading(true)
 
     const payload = {
-      nama: values?.nama,
+      nik: values?.nik || null,
+      nama_lengkap: values?.nama_lengkap || null,
+      jenis_kelamin: values?.jenis_kelamin || null,
       tempat_lahir: values?.tempat_lahir || null,
       tanggal_lahir: values?.tanggal_lahir
         ? dayjs(new Date(values?.tanggal_lahir)).format('YYYY-MM-DD')
         : null,
-      nip_lama: values?.nip_lama || null,
-      nip_baru: values?.nip_baru || null,
-      tmt_golongan: values?.tmt_golongan
-        ? dayjs(new Date(values?.tmt_golongan)).format('YYYY-MM-DD')
+      tanggal_perkawinan: values?.tanggal_perkawinan
+        ? dayjs(new Date(values?.tanggal_perkawinan)).format(
+            'YYYY-MM-DD',
+          )
         : null,
-      tmt_jabatan: values?.tmt_jabatan
-        ? dayjs(new Date(values?.tmt_jabatan)).format('YYYY-MM-DD')
-        : null,
-      kepala_sekolah: values?.kepala_sekolah || false,
-      jurusan: values?.jurusan || null,
-      tahun_lulus: values?.tahun_lulus
-        ? dayjs(new Date(values?.tahun_lulus)).format('YYYY')
-        : null,
-      keterangan: values?.keterangan || null,
-      pendidikan_terakhir_id: values?.pendidikan_terakhir_id,
-      keturunan_id: values?.keturunan_id,
-      golongan_id: values?.golongan_id,
-      jabatan_id: values?.jabatan_id,
-      agama_id: values?.agama_id,
+      golongan_darah: values?.golongan_darah || null,
+      kewarganegaraan: values?.kewarganegaraan || null,
+      pegawai_id: id,
+      agama_id: values.agama_id,
+      pendidikan_kk_id: values.pendidikan_kk_id,
+      status_perkawinan_kk_id: values.status_perkawinan_kk_id,
+      status_hubungan_kk_id: values.status_hubungan_kk_id,
+      jenis_pekerjaan_kk_id: values.jenis_pekerjaan_kk_id,
     }
 
-    createApi({
-      endpoint: '/pegawai',
+    updateApi({
+      endpoint: data?.id
+        ? `/keluarga/update/${data?.id}`
+        : '/keluarga',
       payload,
+      method: data?.id ? 'PATCH' : 'POST',
     })
       .then((res) => {
         form.resetFields()
@@ -95,17 +107,43 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
       })
   }
 
+  useEffect(() => {
+    if (detailKeluarga?.data?.id) {
+      form.setFieldsValue({
+        nik: detailKeluarga?.data?.nik,
+        nama_lengkap: detailKeluarga?.data?.nama_lengkap,
+        jenis_kelamin: detailKeluarga?.data?.jenis_kelamin,
+        tempat_lahir: detailKeluarga?.data?.tempat_lahir,
+        tanggal_lahir: detailKeluarga?.data?.tanggal_lahir
+          ? dayjs(detailKeluarga?.data?.tanggal_lahir)
+          : null,
+        tanggal_perkawinan: detailKeluarga?.data?.tanggal_perkawinan
+          ? dayjs(detailKeluarga?.data?.tanggal_perkawinan)
+          : null,
+        golongan_darah: detailKeluarga?.data?.golongan_darah,
+        kewarganegaraan: detailKeluarga?.data?.kewarganegaraan,
+        agama_id: detailKeluarga?.data?.agama_id,
+        pendidikan_kk_id: detailKeluarga?.data?.pendidikan_kk_id,
+        status_perkawinan_kk_id:
+          detailKeluarga?.data?.status_perkawinan_kk_id,
+        status_hubungan_kk_id:
+          detailKeluarga?.data?.status_hubungan_kk_id,
+        jenis_pekerjaan_kk_id:
+          detailKeluarga?.data?.jenis_pekerjaan_kk_id,
+      })
+    }
+  }, [detailKeluarga, form])
+
   return (
     <Drawer
-      title={isMobile ? false : 'Tambah data'}
+      title={data?.id ? 'Edit data' : 'Tambah data'}
       width={isMobile ? '100%' : 480}
       placement={isMobile ? 'bottom' : 'right'}
       onClose={() => {
         onClose()
         form.resetFields()
       }}
-      open={isOpenAdd}
-      bodyStyle={{ paddingBottom: 80 }}
+      open={data?.show}
       extra={
         <Space>
           <Button
@@ -142,77 +180,51 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
           remember: true,
         }}
         autoComplete="off"
-        // onFinishFailed={onFinishFailed}
         onFinish={onFinish}
         labelAlign="left"
       >
-        <Form.Item
-          label="Nama"
-          name="nama"
-          rules={[
-            {
-              required: true,
-              message: 'Harap isikan nama!',
-            },
-          ]}
-        >
-          <Input size="large" placeholder="Nama ..." />
+        <Form.Item label="NIK" name="nik">
+          <Input size="large" placeholder="NIK ..." />
         </Form.Item>
-        <Form.Item label="Tempat lahir" name="tempat_lahir">
-          <Input size="large" placeholder="Tempat lahir ..." />
+        <Form.Item label="Nama Lengkap" name="nama_lengkap">
+          <Input size="large" placeholder="Nama Lengkap ..." />
         </Form.Item>
-        <Form.Item label="Tanggal lahir" name="tanggal_lahir">
+        <Form.Item label="Jenis Kelamin" name="jenis_kelamin">
+          <Select
+            size="large"
+            showSearch
+            placeholder="Pilih jenis kelamin ..."
+            notFoundContent="Data tidak ditemukan"
+            filterOption={(input, option) =>
+              option.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            filterSort={(optionA, optionB) =>
+              optionA.children
+                .toLowerCase()
+                .localeCompare(optionB.children.toLowerCase())
+            }
+          >
+            <Select.Option value="L">Laki-Laki</Select.Option>
+            <Select.Option value="P">Perempuan</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item label="Tempat Lahir" name="tempat_lahir">
+          <Input size="large" placeholder="Tempat Lahir ..." />
+        </Form.Item>
+        <Form.Item label="Tanggal Lahir" name="tanggal_lahir">
           <DatePicker
             placeholder="Pilih tanggal"
             size="large"
             style={{ width: '100%' }}
           />
         </Form.Item>
-        <Form.Item label="Nip lama" name="nip_lama">
-          <Input
-            size="large"
-            placeholder="Nip lama ..."
-            maxLength="15"
-          />
-        </Form.Item>
-        <Form.Item label="Nip baru" name="nip_baru">
-          <Input
-            size="large"
-            placeholder="Nip baru ..."
-            maxLength="40"
-          />
-        </Form.Item>
-        <Form.Item label="Tmt golongan" name="tmt_golongan">
-          <DatePicker
-            placeholder="Pilih tanggal"
-            size="large"
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item label="Tmt jabatan" name="tmt_jabatan">
-          <DatePicker
-            placeholder="Pilih tanggal"
-            size="large"
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item label="Kepala sekolah" name="kepala_sekolah">
-          <Switch />
-        </Form.Item>
-        <Form.Item
-          label="Pendidikan terakhir"
-          name="pendidikan_terakhir_id"
-          rules={[
-            {
-              required: true,
-              message: 'Harap isikan pendidikan terakhir!',
-            },
-          ]}
-        >
+        <Form.Item label="Golongan Darah" name="golongan_darah">
           <Select
             size="large"
             showSearch
-            placeholder="Pilih pendidikan terakhir ..."
+            placeholder="Pilih golongan darah ..."
             notFoundContent="Data tidak ditemukan"
             filterOption={(input, option) =>
               option.children
@@ -225,38 +237,17 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            {dataPendidikanTerakhir?.data?.map((item) => (
-              <Select.Option key={item?.id} value={item?.id}>
-                {item?.title}
-              </Select.Option>
-            ))}
+            <Select.Option value="A">A</Select.Option>
+            <Select.Option value="B">B</Select.Option>
+            <Select.Option value="AB">AB</Select.Option>
+            <Select.Option value="O">O</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Jurusan" name="jurusan">
-          <Input size="large" placeholder="Jurusan ..." />
-        </Form.Item>
-        <Form.Item label="Tahun lulus" name="tahun_lulus">
-          <DatePicker
-            placeholder="Pilih tahun"
-            size="large"
-            picker="year"
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item
-          label="PD/PDP/NPD"
-          name="keturunan_id"
-          rules={[
-            {
-              required: true,
-              message: 'Harap isikan salah satu!',
-            },
-          ]}
-        >
+        <Form.Item label="Kewarganegaraan" name="kewarganegaraan">
           <Select
             size="large"
             showSearch
-            placeholder="Pilih salah satu ..."
+            placeholder="Pilih kewarganegaraan ..."
             notFoundContent="Data tidak ditemukan"
             filterOption={(input, option) =>
               option.children
@@ -269,77 +260,8 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            {dataKeturunan?.data?.map((item) => (
-              <Select.Option key={item?.id} value={item?.id}>
-                {`${item?.title} (${item?.description})`}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label="Golongan"
-          name="golongan_id"
-          rules={[
-            {
-              required: true,
-              message: 'Harap isikan golongan!',
-            },
-          ]}
-        >
-          <Select
-            size="large"
-            showSearch
-            placeholder="Pilih golongan ..."
-            notFoundContent="Data tidak ditemukan"
-            filterOption={(input, option) =>
-              option.children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
-            filterSort={(optionA, optionB) =>
-              optionA.children
-                .toLowerCase()
-                .localeCompare(optionB.children.toLowerCase())
-            }
-          >
-            {dataGolongan?.data?.map((item) => (
-              <Select.Option key={item?.id} value={item?.id}>
-                {item?.title}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label="Jabatan"
-          name="jabatan_id"
-          rules={[
-            {
-              required: true,
-              message: 'Harap isikan jabatan!',
-            },
-          ]}
-        >
-          <Select
-            size="large"
-            showSearch
-            placeholder="Pilih jabatan ..."
-            notFoundContent="Data tidak ditemukan"
-            filterOption={(input, option) =>
-              option.children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
-            filterSort={(optionA, optionB) =>
-              optionA.children
-                .toLowerCase()
-                .localeCompare(optionB.children.toLowerCase())
-            }
-          >
-            {dataJabatan?.data?.map((item) => (
-              <Select.Option key={item?.id} value={item?.id}>
-                {item?.title}
-              </Select.Option>
-            ))}
+            <Select.Option value="WNI">WNI</Select.Option>
+            <Select.Option value="WNA">WNA</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item
@@ -348,7 +270,7 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
           rules={[
             {
               required: true,
-              message: 'Harap isikan agama!',
+              message: 'Harap pilih salah satu opsi!',
             },
           ]}
         >
@@ -375,8 +297,147 @@ export default function Add({ isMobile, onClose, isOpenAdd }) {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="Keterangan" name="keterangan">
-          <Input.TextArea placeholder="Keterangan ..." />
+        <Form.Item
+          label="Pendidikan"
+          name="pendidikan_kk_id"
+          rules={[
+            {
+              required: true,
+              message: 'Harap pilih salah satu opsi!',
+            },
+          ]}
+        >
+          <Select
+            size="large"
+            showSearch
+            placeholder="Pilih pendidikan ..."
+            notFoundContent="Data tidak ditemukan"
+            filterOption={(input, option) =>
+              option.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            filterSort={(optionA, optionB) =>
+              optionA.children
+                .toLowerCase()
+                .localeCompare(optionB.children.toLowerCase())
+            }
+          >
+            {dataPendidikanKk?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Status Perkawinan"
+          name="status_perkawinan_kk_id"
+          rules={[
+            {
+              required: true,
+              message: 'Harap pilih salah satu opsi!',
+            },
+          ]}
+        >
+          <Select
+            size="large"
+            showSearch
+            placeholder="Pilih status perkawinan ..."
+            notFoundContent="Data tidak ditemukan"
+            filterOption={(input, option) =>
+              option.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            filterSort={(optionA, optionB) =>
+              optionA.children
+                .toLowerCase()
+                .localeCompare(optionB.children.toLowerCase())
+            }
+          >
+            {dataStatusPerkawinanKk?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Tanggal Perkawinan"
+          name="tanggal_perkawinan"
+        >
+          <DatePicker
+            placeholder="Pilih tanggal"
+            size="large"
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Status Hubungan"
+          name="status_hubungan_kk_id"
+          rules={[
+            {
+              required: true,
+              message: 'Harap pilih salah satu opsi!',
+            },
+          ]}
+        >
+          <Select
+            size="large"
+            showSearch
+            placeholder="Pilih status hubungan ..."
+            notFoundContent="Data tidak ditemukan"
+            filterOption={(input, option) =>
+              option.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            filterSort={(optionA, optionB) =>
+              optionA.children
+                .toLowerCase()
+                .localeCompare(optionB.children.toLowerCase())
+            }
+          >
+            {dataStatusHubunganKk?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Jenis Pekerjaan"
+          name="jenis_pekerjaan_kk_id"
+          rules={[
+            {
+              required: true,
+              message: 'Harap pilih salah satu opsi!',
+            },
+          ]}
+        >
+          <Select
+            size="large"
+            showSearch
+            placeholder="Pilih jenis pekerjaan ..."
+            notFoundContent="Data tidak ditemukan"
+            filterOption={(input, option) =>
+              option.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            filterSort={(optionA, optionB) =>
+              optionA.children
+                .toLowerCase()
+                .localeCompare(optionB.children.toLowerCase())
+            }
+          >
+            {dataJenisPekerjaanKk?.data?.map((item) => (
+              <Select.Option key={item?.id} value={item?.id}>
+                {item?.title}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item hidden>
           <Button ref={refButton} type="primary" htmlType="submit">
