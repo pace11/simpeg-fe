@@ -52,7 +52,6 @@ export default function PekerjaanModal({
       method: data?.id ? 'PATCH' : 'POST',
     })
       .then((res) => {
-        console.log('res => ', res)
         form.resetFields()
         setLoading(false)
         notification.success({

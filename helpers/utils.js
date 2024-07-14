@@ -146,3 +146,7 @@ export const randomColor = () => {
   )
   return color[randomNumber]
 }
+
+export const roleUser = ({ user = {} }) => {
+  return String(user?.role || '').toLocaleLowerCase()
+}

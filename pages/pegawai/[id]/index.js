@@ -1,4 +1,6 @@
-import { deleteApi } from '@/helpers/utils'
+import RoleComponentRender from '@/components/role-component-render'
+import { ProfileContext } from '@/context/profileContextProvider'
+import { deleteApi, roleUser } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { toMappingDetailPegawai } from '@/mapping'
 import {
@@ -22,7 +24,7 @@ import {
 import dayjs from 'dayjs'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 const Pekerjaan = dynamic(() => import('./drawer/pekerjaan'))
 const Keluarga = dynamic(() => import('./drawer/keluarga'))
@@ -31,6 +33,7 @@ const Pendidikan = dynamic(() => import('./drawer/pendidikan'))
 const { Title } = Typography
 
 const PegawaiDetail = () => {
+  const profileUser = useContext(ProfileContext)
   const router = useRouter()
   const { id } = router?.query || {}
   const [pekerjaan, setPekerjaan] = useState({
@@ -316,7 +319,8 @@ const PegawaiDetail = () => {
       title: 'Pendidikan',
       key: 'pendidikan_terakhir',
       dataIndex: 'pendidikan_terakhir',
-      render: (pendidikan_terakhir) => pendidikan_terakhir?.title || '-',
+      render: (pendidikan_terakhir) =>
+        pendidikan_terakhir?.title || '-',
     },
     {
       title: 'Jurusan',
@@ -393,19 +397,25 @@ const PegawaiDetail = () => {
           justify="space-between"
         >
           <Title level={5}>Data Pekerjaan</Title>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() =>
-              setPekerjaan((prevValue) => ({
-                ...prevValue,
-                show: true,
-                id: '',
-              }))
-            }
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
           >
-            Tambah Data
-          </Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() =>
+                setPekerjaan((prevValue) => ({
+                  ...prevValue,
+                  show: true,
+                  id: '',
+                }))
+              }
+            >
+              Tambah Data
+            </Button>
+          </RoleComponentRender>
         </Flex>
         <Table
           rowKey="data-pekerjaan"
@@ -428,19 +438,25 @@ const PegawaiDetail = () => {
           justify="space-between"
         >
           <Title level={5}>Data Keluarga</Title>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() =>
-              setKeluarga((prevValue) => ({
-                ...prevValue,
-                show: true,
-                id: '',
-              }))
-            }
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
           >
-            Tambah Data
-          </Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() =>
+                setKeluarga((prevValue) => ({
+                  ...prevValue,
+                  show: true,
+                  id: '',
+                }))
+              }
+            >
+              Tambah Data
+            </Button>
+          </RoleComponentRender>
         </Flex>
         <Table
           rowKey="data-keluarga"
@@ -463,19 +479,25 @@ const PegawaiDetail = () => {
           justify="space-between"
         >
           <Title level={5}>Data Pendidikan</Title>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() =>
-              setPendidikan((prevValue) => ({
-                ...prevValue,
-                show: true,
-                id: '',
-              }))
-            }
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
           >
-            Tambah Data
-          </Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() =>
+                setPendidikan((prevValue) => ({
+                  ...prevValue,
+                  show: true,
+                  id: '',
+                }))
+              }
+            >
+              Tambah Data
+            </Button>
+          </RoleComponentRender>
         </Flex>
         <Table
           rowKey="data-pendidikan"

@@ -1,27 +1,27 @@
-import { useState } from 'react'
-import dynamic from 'next/dynamic'
+import { SORTING } from '@/constants'
+import { deleteApi } from '@/helpers/utils'
+import { HookSwr } from '@/lib/hooks/HookSwr'
 import {
-  Card,
-  Button,
-  Table,
-  Space,
-  Modal,
-  Input,
-  notification,
-} from 'antd'
-import {
-  PlusOutlined,
-  ReloadOutlined,
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  SelectOutlined,
   MoreOutlined,
+  PlusOutlined,
+  ReloadOutlined,
+  SelectOutlined,
 } from '@ant-design/icons'
-import { HookSwr } from '@/lib/hooks/HookSwr'
-import { deleteApi } from '@/helpers/utils'
-import { SORTING } from '@/constants'
+import {
+  Button,
+  Card,
+  Input,
+  Modal,
+  Space,
+  Table,
+  notification,
+} from 'antd'
 import dayjs from 'dayjs'
+import dynamic from 'next/dynamic'
+import { useState } from 'react'
 
 const Add = dynamic(() => import('./drawer/add'))
 const Edit = dynamic(() => import('./drawer/edit'))
@@ -217,7 +217,7 @@ const PendidikanTerakhir = ({ isMobile }) => {
         loading={isLoading}
         onChange={onChange}
         style={{ width: '100%' }}
-        scroll={{ x: 425 }}
+        scroll={{ x: 1300, y: 500 }}
       />
       {isOpenAdd && (
         <Add

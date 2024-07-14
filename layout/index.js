@@ -1,4 +1,4 @@
-import { HookSwr } from '@/lib/hooks/HookSwr'
+import { ProfileContext } from '@/context/profileContextProvider'
 import { DatabaseOutlined, UserOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
@@ -13,17 +13,15 @@ import {
 } from 'antd'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import Menus from './menu'
+import { useContext, useEffect, useState } from 'react'
+import { menu } from './menu'
 
 const { Title } = Typography
 const { Header, Content, Footer, Sider } = Layout
 
 const LayoutApp = ({ children, isMobile }) => {
+  const profileUser = useContext(ProfileContext)
   const router = useRouter()
-  const { data: userDetail, isLoading } = HookSwr({
-    path: '/user/me',
-  })
   const [collapsed, setCollapsed] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState(null)
   const [itemBreadcrumbs, setItemBreadcrumbs] = useState([
@@ -67,16 +65,24 @@ const LayoutApp = ({ children, isMobile }) => {
     router.push({ pathname: path[key] })
   }
 
-  const items = [
-    {
-      key: 'history',
-      label: 'History',
-    },
-    {
-      key: 'logout',
-      label: 'Logout',
-    },
-  ]
+  const items = {
+    admin: [
+      {
+        key: 'history',
+        label: 'History',
+      },
+      {
+        key: 'logout',
+        label: 'Logout',
+      },
+    ],
+    headmaster: [
+      {
+        key: 'logout',
+        label: 'Logout',
+      },
+    ],
+  }
 
   useEffect(() => {
     const newRouter = router?.asPath.replace('/', '').split('/')
@@ -125,7 +131,7 @@ const LayoutApp = ({ children, isMobile }) => {
             onSelect={HandleMenuSelect}
             selectedKeys={selectedKeys}
             mode="inline"
-            items={Menus}
+            items={menu({ role: profileUser?.role })}
           />
         </Sider>
         <Layout>
@@ -144,19 +150,18 @@ const LayoutApp = ({ children, isMobile }) => {
             <Row>
               <Dropdown.Button
                 size="middle"
-                loading={isLoading}
                 menu={{
-                  items,
+                  items: items?.[profileUser?.role],
                   onClick: onMenuClick,
                 }}
               >
-                {!isMobile ? userDetail?.data?.email : ''}
+                {!isMobile ? profileUser?.email : ''}
                 <Tag
                   color="green"
                   icon={<UserOutlined />}
                   style={{ marginLeft: '5px' }}
                 >
-                  {userDetail?.data?.role}
+                  {profileUser?.role}
                 </Tag>
               </Dropdown.Button>
             </Row>

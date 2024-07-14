@@ -219,7 +219,7 @@ const Keturunan = ({ isMobile }) => {
         loading={isLoading}
         onChange={onChange}
         style={{ width: '100%' }}
-        scroll={{ x: 425 }}
+        scroll={{ x: 1300, y: 500 }}
       />
       {isOpenAdd && (
         <Add

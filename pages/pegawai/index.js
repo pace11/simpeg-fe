@@ -1,5 +1,7 @@
+import RoleComponentRender from '@/components/role-component-render'
 import { SORTING } from '@/constants'
-import { deleteApi } from '@/helpers/utils'
+import { ProfileContext } from '@/context/profileContextProvider'
+import { deleteApi, roleUser } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import {
   CheckCircleOutlined,
@@ -26,12 +28,13 @@ import {
 import dayjs from 'dayjs'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 const Add = dynamic(() => import('./drawer/add'))
 const Edit = dynamic(() => import('./drawer/edit'))
 
 const Pegawai = ({ isMobile }) => {
+  const profileUser = useContext(ProfileContext)
   const { data, isLoading, reloadData } = HookSwr({
     path: '/pegawai',
   })
@@ -154,21 +157,33 @@ const Pegawai = ({ isMobile }) => {
           >
             Detail
           </Button>
-          <Button
-            type="dashed"
-            icon={<EditOutlined />}
-            onClick={() => setOpenEdit(item?.id)}
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
           >
-            Ubah
-          </Button>
-          <Button
-            danger
-            type="primary"
-            icon={<DeleteOutlined />}
-            onClick={() => showConfirmDelete(item)}
+            <Button
+              type="dashed"
+              icon={<EditOutlined />}
+              onClick={() => setOpenEdit(item?.id)}
+            >
+              Ubah
+            </Button>
+          </RoleComponentRender>
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
           >
-            Hapus
-          </Button>
+            <Button
+              danger
+              type="primary"
+              icon={<DeleteOutlined />}
+              onClick={() => showConfirmDelete(item)}
+            >
+              Hapus
+            </Button>
+          </RoleComponentRender>
         </Space>
       ),
     },
@@ -202,14 +217,20 @@ const Pegawai = ({ isMobile }) => {
           >
             Refresh data
           </Button>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setOpenAdd(true)}
-            block
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
           >
-            Tambah data
-          </Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setOpenAdd(true)}
+              block
+            >
+              Tambah data
+            </Button>
+          </RoleComponentRender>
         </Space>
       ),
       icon: <SelectOutlined />,
@@ -232,13 +253,19 @@ const Pegawai = ({ isMobile }) => {
       >
         Refresh data
       </Button>
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={() => setOpenAdd(true)}
+      <RoleComponentRender
+        condition={['admin'].includes(
+          roleUser({ user: profileUser }),
+        )}
       >
-        Tambah data
-      </Button>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setOpenAdd(true)}
+        >
+          Tambah data
+        </Button>
+      </RoleComponentRender>
     </Space>,
   ]
 
@@ -265,7 +292,7 @@ const Pegawai = ({ isMobile }) => {
         loading={isLoading}
         onChange={onChange}
         style={{ width: '100%' }}
-        scroll={{ x: 1300 }}
+        scroll={{ x: 1300, y: 500 }}
         pagination={{
           showTotal: (total) => `${total} data`,
         }}
