@@ -1,6 +1,6 @@
 import RoleComponentRender from '@/components/role-component-render'
 import { ProfileContext } from '@/context/profileContextProvider'
-import { deleteApi, roleUser } from '@/helpers/utils'
+import { deleteApi, messageGolongan, roleUser } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { toMappingDetailPegawai } from '@/mapping'
 import {
@@ -12,6 +12,7 @@ import {
 import {
   Button,
   Card,
+  Col,
   Descriptions,
   Flex,
   Modal,
@@ -73,6 +74,8 @@ const PegawaiDetail = () => {
   } = HookSwr({
     path: id ? `/pendidikan?pegawai_id=${id}` : '',
   })
+
+  console.log('data => ', dataPekerjaan)
 
   const showConfirmDelete = ({ endpoint, fetchingData }) => {
     Modal.confirm({
@@ -377,19 +380,26 @@ const PegawaiDetail = () => {
 
   return (
     <Card title="Detail Pegawai" bordered={false}>
-      <Descriptions
-        bordered
-        size="small"
-        column={4}
-        layout="vertical"
-        items={toMappingDetailPegawai({
-          data: detailPegawai?.data || {},
-        })?.map((item, idx) => ({
-          key: `${idx}`,
-          label: item?.label,
-          children: item?.value,
-        }))}
-      />
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          {messageGolongan({ data: detailPegawai?.data ?? {} })}
+        </Col>
+        <Col span={24}>
+          <Descriptions
+            bordered
+            size="small"
+            column={4}
+            layout="vertical"
+            items={toMappingDetailPegawai({
+              data: detailPegawai?.data || {},
+            })?.map((item, idx) => ({
+              key: `${idx}`,
+              label: item?.label,
+              children: item?.value,
+            }))}
+          />
+        </Col>
+      </Row>
       <Row>
         <Flex
           style={{ width: '100%', paddingTop: '20px' }}
@@ -419,7 +429,11 @@ const PegawaiDetail = () => {
         </Flex>
         <Table
           rowKey="data-pekerjaan"
-          dataSource={dataPekerjaan?.data}
+          dataSource={
+            Array.isArray(dataPekerjaan?.data)
+              ? dataPekerjaan?.data
+              : []
+          }
           columns={columnsPekerjaan}
           loading={isLoadingPekerjaan}
           style={{ width: '100%' }}
@@ -460,7 +474,11 @@ const PegawaiDetail = () => {
         </Flex>
         <Table
           rowKey="data-keluarga"
-          dataSource={dataKeluarga?.data}
+          dataSource={
+            Array.isArray(dataKeluarga?.data)
+              ? dataKeluarga?.data
+              : []
+          }
           columns={columnsKeluarga}
           loading={isLoadingKeluarga}
           style={{ width: '100%' }}
@@ -501,7 +519,11 @@ const PegawaiDetail = () => {
         </Flex>
         <Table
           rowKey="data-pendidikan"
-          dataSource={dataPendidikan?.data}
+          dataSource={
+            Array.isArray(dataPendidikan?.data)
+              ? dataPendidikan?.data
+              : []
+          }
           columns={columnsPendidikan}
           loading={isLoadingPendidikan}
           style={{ width: '100%' }}

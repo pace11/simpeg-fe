@@ -1,4 +1,6 @@
+import { Alert } from 'antd'
 import Axios from 'axios'
+import dayjs from 'dayjs'
 import Cookies from 'js-cookie'
 
 export const getMeApi = async ({ token }) => {
@@ -149,4 +151,18 @@ export const randomColor = () => {
 
 export const roleUser = ({ user = {} }) => {
   return String(user?.role || '').toLocaleLowerCase()
+}
+
+export const messageGolongan = ({ data = {} }) => {
+  const diff = dayjs().diff(data?.tmt_golongan, 'year')
+
+  if (diff >= 2)
+    return (
+      <Alert
+        message="Sudah siap untuk naik golongan ke selanjutnya"
+        type="success"
+        showIcon
+      />
+    )
+  return null
 }

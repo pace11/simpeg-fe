@@ -1,12 +1,15 @@
+import DownloadPegawai from '@/components/download-pegawai'
 import RoleComponentRender from '@/components/role-component-render'
 import { SORTING } from '@/constants'
 import { ProfileContext } from '@/context/profileContextProvider'
-import { deleteApi, roleUser } from '@/helpers/utils'
+import { deleteApi, messageGolongan, roleUser } from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
+import { useGeneratePDF } from '@/lib/hooks/useGeneratePDF'
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
   EyeOutlined,
@@ -34,6 +37,32 @@ const Add = dynamic(() => import('./drawer/add'))
 const Edit = dynamic(() => import('./drawer/edit'))
 
 const Pegawai = ({ isMobile }) => {
+  const {
+    generatePDF,
+    isLoading: isLoadingDownload,
+    setLoading,
+  } = useGeneratePDF({
+    onSuccess: ({ preview }) => {
+      Modal.success({
+        title: 'Preview',
+        width: 900,
+        content: (
+          <>
+            {preview && (
+              <iframe
+                title={preview}
+                src={preview}
+                width="100%"
+                height={500}
+                onError={() => setLoading('')}
+                onLoad={() => setLoading('')}
+              />
+            )}
+          </>
+        ),
+      })
+    },
+  })
   const profileUser = useContext(ProfileContext)
   const { data, isLoading, reloadData } = HookSwr({
     path: '/pegawai',
@@ -147,6 +176,11 @@ const Pegawai = ({ isMobile }) => {
       render: (jabatan) => jabatan?.title || '-',
     },
     {
+      title: 'Status',
+      width: 300,
+      render: (item) => messageGolongan({ data: item }),
+    },
+    {
       title: 'Aksi',
       fixed: 'right',
       render: (item) => (
@@ -253,6 +287,25 @@ const Pegawai = ({ isMobile }) => {
       >
         Refresh data
       </Button>
+      <Button
+        type="dashed"
+        icon={<DownloadOutlined />}
+        loading={isLoadingDownload}
+        onClick={() => {
+          generatePDF({
+            filename: 'download.pdf',
+            items: [
+              {
+                template: <DownloadPegawai data={data?.data} />,
+              },
+            ],
+            margin: [25, 10],
+          })
+        }}
+        block
+      >
+        Download
+      </Button>
       <RoleComponentRender
         condition={['admin'].includes(
           roleUser({ user: profileUser }),
@@ -319,6 +372,9 @@ const Pegawai = ({ isMobile }) => {
           }}
         />
       )}
+      <div style={{ display: 'none' }}>
+        <DownloadPegawai />
+      </div>
     </Card>
   )
 }

@@ -33,18 +33,18 @@ export const toMappingDetailPegawai = ({ data }) => [
     value: data?.golongan?.title || '-',
   },
   {
+    label: 'Tamat Golongan',
+    value: data?.tmt_golongan
+      ? dayjs(data?.tmt_golongan).locale('id').format('DD MMMM YYYY')
+      : '-',
+  },
+  {
     label: 'Jabatan',
     value: data?.jabatan?.title || '-',
   },
   {
     label: 'Agama',
     value: data?.agama?.title || '-',
-  },
-  {
-    label: 'Tamat Golongan',
-    value: data?.tmt_golongan
-      ? dayjs(data?.tmt_golongan).locale('id').format('DD MMMM YYYY')
-      : '-',
   },
   {
     label: 'Tamat Jabatan',
