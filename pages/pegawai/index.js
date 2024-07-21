@@ -1,4 +1,5 @@
 import DownloadPegawai from '@/components/download-pegawai'
+import DownloadPegawaiDetail from '@/components/download-pegawai-detail'
 import RoleComponentRender from '@/components/role-component-render'
 import { SORTING } from '@/constants'
 import { ProfileContext } from '@/context/profileContextProvider'
@@ -15,6 +16,7 @@ import {
   EyeOutlined,
   MoreOutlined,
   PlusOutlined,
+  PrinterOutlined,
   ReloadOutlined,
   SelectOutlined,
 } from '@ant-design/icons'
@@ -41,6 +43,7 @@ const Pegawai = ({ isMobile }) => {
     generatePDF,
     isLoading: isLoadingDownload,
     setLoading,
+    filename,
   } = useGeneratePDF({
     onSuccess: ({ preview }) => {
       Modal.success({
@@ -204,6 +207,27 @@ const Pegawai = ({ isMobile }) => {
               Ubah
             </Button>
           </RoleComponentRender>
+          <Button
+            type="dashed"
+            icon={<PrinterOutlined />}
+            loading={
+              isLoadingDownload &&
+              filename === `cetak-pegawai-${item?.id}.pdf`
+            }
+            onClick={() => {
+              generatePDF({
+                filename: `cetak-pegawai-${item?.id}.pdf`,
+                items: [
+                  {
+                    template: <DownloadPegawaiDetail detail={item} />,
+                  },
+                ],
+                margin: [25, 10],
+              })
+            }}
+          >
+            Cetak
+          </Button>
           <RoleComponentRender
             condition={['admin'].includes(
               roleUser({ user: profileUser }),
@@ -290,7 +314,7 @@ const Pegawai = ({ isMobile }) => {
       <Button
         type="dashed"
         icon={<DownloadOutlined />}
-        loading={isLoadingDownload}
+        loading={isLoadingDownload && filename === 'download.pdf'}
         onClick={() => {
           generatePDF({
             filename: 'download.pdf',
@@ -374,6 +398,7 @@ const Pegawai = ({ isMobile }) => {
       )}
       <div style={{ display: 'none' }}>
         <DownloadPegawai />
+        <DownloadPegawaiDetail />
       </div>
     </Card>
   )
