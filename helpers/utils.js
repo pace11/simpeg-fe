@@ -166,3 +166,40 @@ export const messageGolongan = ({ data = {} }) => {
     )
   return null
 }
+
+export const statusKinerja = ({ value = 0 }) => {
+  if (value >= 90) {
+    return <Alert message="Sangat Baik" type="success" showIcon />
+  }
+
+  if (value >= 75 && value < 90) {
+    return <Alert message="Cukup Baik" type="success" showIcon />
+  }
+
+  if (value >= 60 && value < 75) {
+    return <Alert message="Baik" type="success" showIcon />
+  }
+
+  return (
+    <Alert message="Perlu ditingkatkan" type="warning" showIcon />
+  )
+}
+
+export const getMonthId = ({ month = 0 }) => {
+  const mapping = [
+    '',
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ]
+  return mapping?.[month]
+}

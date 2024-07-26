@@ -1,6 +1,12 @@
 import RoleComponentRender from '@/components/role-component-render'
 import { ProfileContext } from '@/context/profileContextProvider'
-import { deleteApi, messageGolongan, roleUser } from '@/helpers/utils'
+import {
+  deleteApi,
+  getMonthId,
+  messageGolongan,
+  roleUser,
+  statusKinerja,
+} from '@/helpers/utils'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { toMappingDetailPegawai } from '@/mapping'
 import {
@@ -30,6 +36,8 @@ import { useContext, useState } from 'react'
 const Pekerjaan = dynamic(() => import('./drawer/pekerjaan'))
 const Keluarga = dynamic(() => import('./drawer/keluarga'))
 const Pendidikan = dynamic(() => import('./drawer/pendidikan'))
+const Absensi = dynamic(() => import('./drawer/absensi'))
+const Aktifitas = dynamic(() => import('./drawer/aktifitas'))
 
 const { Title } = Typography
 
@@ -46,6 +54,14 @@ const PegawaiDetail = () => {
     id: '',
   })
   const [pendidikan, setPendidikan] = useState({
+    show: false,
+    id: '',
+  })
+  const [absensi, setAbsensi] = useState({
+    show: false,
+    id: '',
+  })
+  const [aktifitas, setAktifitas] = useState({
     show: false,
     id: '',
   })
@@ -74,8 +90,23 @@ const PegawaiDetail = () => {
   } = HookSwr({
     path: id ? `/pendidikan?pegawai_id=${id}` : '',
   })
-
-  console.log('data => ', dataPekerjaan)
+  const {
+    data: dataAbsensi,
+    isLoading: isLoadingAbsensi,
+    reloadData: reloadDataAbsensi,
+  } = HookSwr({
+    path: id ? `/absensi?pegawai_id=${id}` : '',
+  })
+  const {
+    data: dataAktifitas,
+    isLoading: isLoadingAktifitas,
+    reloadData: reloadDataAktifitas,
+  } = HookSwr({
+    path: id ? `/aktifitas?pegawai_id=${id}` : '',
+  })
+  const { data: dataKinerja, isLoading: isLoadingKinerja } = HookSwr({
+    path: id ? `/absensi/filter?pegawai_id=${id}` : '',
+  })
 
   const showConfirmDelete = ({ endpoint, fetchingData }) => {
     Modal.confirm({
@@ -378,6 +409,151 @@ const PegawaiDetail = () => {
     },
   ]
 
+  const columnsAbsensi = [
+    {
+      title: 'Tanggal Masuk',
+      key: 'tgl_masuk',
+      dataIndex: 'tgl_masuk',
+      render: (tgl_masuk) =>
+        tgl_masuk
+          ? dayjs(tgl_masuk).locale('id').format('DD MMMM YYYY HH:mm')
+          : '-',
+    },
+    {
+      title: 'Tanggal Pulang',
+      key: 'tgl_pulang',
+      dataIndex: 'tgl_pulang',
+      render: (tgl_pulang) =>
+        tgl_pulang
+          ? dayjs(tgl_pulang)
+              .locale('id')
+              .format('DD MMMM YYYY HH:mm')
+          : '-',
+    },
+    {
+      title: 'Aksi',
+      fixed: 'right',
+      render: (item) => (
+        <Space direction="vertical">
+          <Button
+            size="small"
+            type="dashed"
+            icon={<EditOutlined />}
+            onClick={() =>
+              setAbsensi((prevValue) => ({
+                ...prevValue,
+                show: true,
+                id: item?.id,
+              }))
+            }
+          >
+            Ubah
+          </Button>
+          <Button
+            danger
+            size="small"
+            type="primary"
+            icon={<DeleteOutlined />}
+            onClick={() =>
+              showConfirmDelete({
+                endpoint: `/absensi/delete/${item?.id}`,
+                fetchingData: () => reloadDataAbsensi(''),
+              })
+            }
+          >
+            Hapus
+          </Button>
+        </Space>
+      ),
+    },
+  ]
+
+  const columnsAktifitas = [
+    {
+      title: 'Tanggal Aktifitas',
+      key: 'tgl_aktifitas',
+      dataIndex: 'tgl_aktifitas',
+      render: (tgl_aktifitas) =>
+        tgl_aktifitas
+          ? dayjs(tgl_aktifitas)
+              .locale('id')
+              .format('DD MMMM YYYY HH:mm')
+          : '-',
+    },
+    {
+      title: 'Aktifitas',
+      key: 'aktifitas',
+      dataIndex: 'aktifitas',
+      render: (aktifitas) => (
+        <Typography.Text>{aktifitas}</Typography.Text>
+      ),
+    },
+    {
+      title: 'Aksi',
+      fixed: 'right',
+      render: (item) => (
+        <Space direction="vertical">
+          <Button
+            size="small"
+            type="dashed"
+            icon={<EditOutlined />}
+            onClick={() =>
+              setAktifitas((prevValue) => ({
+                ...prevValue,
+                show: true,
+                id: item?.id,
+              }))
+            }
+          >
+            Ubah
+          </Button>
+          <Button
+            danger
+            size="small"
+            type="primary"
+            icon={<DeleteOutlined />}
+            onClick={() =>
+              showConfirmDelete({
+                endpoint: `/aktifitas/delete/${item?.id}`,
+                fetchingData: () => reloadDataAktifitas(''),
+              })
+            }
+          >
+            Hapus
+          </Button>
+        </Space>
+      ),
+    },
+  ]
+
+  const columnsKinerja = [
+    {
+      title: 'Periode',
+      render: ({ year, month }) => (
+        <Typography.Text>{`${year} ${getMonthId({
+          month,
+        })}`}</Typography.Text>
+      ),
+    },
+    {
+      title: 'Nilai',
+      render: ({ count }) => (
+        <Typography.Text>
+          {count ? `${Math.round((count / 20) * 100)}%` : 0}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: 'Status',
+      width: 500,
+      render: ({ count }) => (
+        <Typography.Text>
+          {statusKinerja({ value: Math.round((count / 20) * 100) })}
+        </Typography.Text>
+      ),
+    },
+  ]
+
   return (
     <Card title="Detail Pegawai" bordered={false}>
       <Row gutter={[24, 24]}>
@@ -399,6 +575,118 @@ const PegawaiDetail = () => {
             }))}
           />
         </Col>
+      </Row>
+      <Row>
+        <Flex
+          style={{ width: '100%', paddingTop: '20px' }}
+          align="center"
+          justify="space-between"
+        >
+          <Title level={5}>Data Absensi</Title>
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
+          >
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() =>
+                setAbsensi((prevValue) => ({
+                  ...prevValue,
+                  show: true,
+                  id: '',
+                }))
+              }
+            >
+              Tambah Data
+            </Button>
+          </RoleComponentRender>
+        </Flex>
+        <Table
+          rowKey="data-pekerjaan"
+          dataSource={
+            Array.isArray(dataAbsensi?.data) ? dataAbsensi?.data : []
+          }
+          columns={columnsAbsensi}
+          loading={isLoadingAbsensi}
+          style={{ width: '100%' }}
+          scroll={{ x: 1300 }}
+          pagination={{
+            pageSize: 5,
+            showTotal: (total) => `${total} data`,
+          }}
+          size="small"
+        />
+      </Row>
+      <Row>
+        <Flex
+          style={{ width: '100%', paddingTop: '20px' }}
+          align="center"
+          justify="space-between"
+        >
+          <Title level={5}>Data Kinerja</Title>
+        </Flex>
+        <Table
+          rowKey="data-pekerjaan"
+          dataSource={
+            Array.isArray(dataKinerja?.data) ? dataKinerja?.data : []
+          }
+          columns={columnsKinerja}
+          loading={isLoadingKinerja}
+          style={{ width: '100%' }}
+          scroll={{ x: 1300 }}
+          pagination={{
+            pageSize: 5,
+            showTotal: (total) => `${total} data`,
+          }}
+          size="small"
+        />
+      </Row>
+      <Row>
+        <Flex
+          style={{ width: '100%', paddingTop: '20px' }}
+          align="center"
+          justify="space-between"
+        >
+          <Title level={5}>Data Aktifitas</Title>
+          <RoleComponentRender
+            condition={['admin'].includes(
+              roleUser({ user: profileUser }),
+            )}
+          >
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() =>
+                setAktifitas((prevValue) => ({
+                  ...prevValue,
+                  show: true,
+                  id: '',
+                }))
+              }
+            >
+              Tambah Data
+            </Button>
+          </RoleComponentRender>
+        </Flex>
+        <Table
+          rowKey="data-pekerjaan"
+          dataSource={
+            Array.isArray(dataAktifitas?.data)
+              ? dataAktifitas?.data
+              : []
+          }
+          columns={columnsAktifitas}
+          loading={isLoadingAktifitas}
+          style={{ width: '100%' }}
+          scroll={{ x: 1300 }}
+          pagination={{
+            pageSize: 5,
+            showTotal: (total) => `${total} data`,
+          }}
+          size="small"
+        />
       </Row>
       <Row>
         <Flex
@@ -574,6 +862,34 @@ const PegawaiDetail = () => {
               id: '',
             }))
             reloadDataPendidikan('')
+          }}
+        />
+      )}
+      {absensi?.show && (
+        <Absensi
+          id={id}
+          data={absensi}
+          onClose={() => {
+            setAbsensi((prevValue) => ({
+              ...prevValue,
+              show: false,
+              id: '',
+            }))
+            reloadDataAbsensi('')
+          }}
+        />
+      )}
+      {aktifitas?.show && (
+        <Aktifitas
+          id={id}
+          data={aktifitas}
+          onClose={() => {
+            setAktifitas((prevValue) => ({
+              ...prevValue,
+              show: false,
+              id: '',
+            }))
+            reloadDataAktifitas('')
           }}
         />
       )}
